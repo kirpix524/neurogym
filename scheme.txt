@@ -1,0 +1,70 @@
+```bash
+neurogym/
+├── .env                     # Переменные окружения (FLASK_APP, SECRET_KEY и т.п.)
+├── .gitignore
+├── README.md                # Ваш обновлённый README
+├── requirements.txt
+├── Dockerfile               # (опционально) для контейнеризации
+├── main.py                  # Точка входа: создание Flask‑app, подключение расширений и Blueprint
+├── migrations/              # Alembic‑миграции
+│   └── …
+├── app/
+│   ├── domain/              # Чистая бизнес‑логика
+│   │   ├── entities/
+│   │   │   ├── user.py
+│   │   │   ├── memory_item.py
+│   │   │   └── folder.py
+│   │   ├── repositories/
+│   │   │   ├── user_repository.py
+│   │   │   ├── item_repository.py
+│   │   │   └── folder_repository.py
+│   │   └── services/
+│   │       ├── user_service.py
+│   │       ├── memorization_service.py
+│   │       └── folder_service.py
+│   │
+│   ├── infrastructure/      # Адаптеры внешних зависимостей
+│   │   ├── db/
+│   │   │   └── models.py    # SQLAlchemy‑модели: UserModel, MemoryItemModel, FolderModel
+│   │   ├── repositories/
+│   │   │   ├── user_repository_sql.py
+│   │   │   ├── item_repository_sql.py
+│   │   │   └── folder_repository_sql.py
+│   │   └── flask_extensions.py  # init SQLAlchemy, Migrate и т.п.
+│   │
+│   ├── application/         # Слой Use‑Cases и DTO
+│   │   ├── dtos/
+│   │   │   ├── user_dto.py
+│   │   │   ├── item_dto.py
+│   │   │   └── folder_dto.py
+│   │   └── use_cases/
+│   │       ├── register_user.py
+│   │       ├── add_memory_item.py
+│   │       ├── create_folder.py
+│   │       └── move_folder.py
+│   │
+│   └── presentation/        # MVC: контроллеры, шаблоны и статика
+│       ├── controllers/
+│       │   ├── auth_controller.py
+│       │   ├── item_controller.py
+│       │   └── folder_controller.py
+│       ├── templates/
+│       │   ├── auth/
+│       │   │   ├── register.html
+│       │   │   └── login.html
+│       │   ├── items/
+│       │   │   ├── list.html
+│       │   │   └── detail.html
+│       │   └── folders/
+│       │       └── list.html
+│       └── static/
+│           ├── css/
+│           └── js/
+│
+└── tests/
+    ├── domain/
+    ├── infrastructure/
+    ├── application/
+    ├── presentation/
+    └── conftest.py
+```
