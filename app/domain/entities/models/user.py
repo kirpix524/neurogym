@@ -28,18 +28,3 @@ class User(IUser):
     @hashed_password.setter
     def hashed_password(self, hashed_password: str) -> None:
         pass
-
-    def add_item(self, item: Any, folder_id: int) -> None:
-        pass
-
-    def remove_item(self, item_id: int) -> None:
-        pass
-
-    def list_items(self) -> List[Any]:
-        pass
-
-    def remove_folder(self, folder_id: int) -> None:
-        pass
-
-    def add_folder(self, folder: Any) -> None:
-        pass

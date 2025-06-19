@@ -27,23 +27,3 @@ class IUser(ABC):
     @abstractmethod
     def hashed_password(self, hashed_password: str) -> None:
         pass
-
-    @abstractmethod
-    def add_item(self, item: Any, folder_id: int) -> None:
-        pass
-
-    @abstractmethod
-    def add_folder(self, folder: Any) -> None:
-        pass
-
-    @abstractmethod
-    def remove_item(self, item_id: int) -> None:
-        pass
-
-    @abstractmethod
-    def remove_folder(self, folder_id: int) -> None:
-        pass
-
-    @abstractmethod
-    def list_items(self) -> List[Any]:
-        pass
