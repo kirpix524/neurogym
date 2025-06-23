@@ -28,3 +28,11 @@ class User(IUser):
     @hashed_password.setter
     def hashed_password(self, hashed_password: str) -> None:
         pass
+
+    @property
+    def user_name(self) -> str:
+        pass
+
+    @user_name.setter
+    def user_name(self, user_name: str) -> None:
+        pass
