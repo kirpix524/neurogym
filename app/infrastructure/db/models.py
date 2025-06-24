@@ -1,6 +1,7 @@
 from typing import Optional
 
 from flask_sqlalchemy import SQLAlchemy
+from sqlalchemy.ext.hybrid import hybrid_property
 from werkzeug.security import generate_password_hash, check_password_hash
 
 from app.config import SQL_DATA
@@ -32,7 +33,7 @@ class User(db.Model):
     def username(self, value: str) -> None:
         self._username = value
 
-    @property
+    @hybrid_property
     def email(self) -> str:
         return self._email
 

@@ -23,15 +23,18 @@ def create_app() -> Flask:
 
     @app.route('/register', methods=['POST'])
     def register_user() -> Response:
-        username = request.form.get('username', '').strip()
         email = request.form.get('email', '').strip()
         password = request.form.get('password', '')
 
+        print(f"email: {email}, password: {password}")
         if not email or not password:
             flash('Все поля обязательны для заполнения.', 'error')
             return redirect(url_for('show_register_form'))
 
-        if User.query.filter_by(email=email).first() is not None:
+        chk_email = User.query.filter_by(email=email).first()
+        print(f"chk_email: {chk_email}")
+        if chk_email is not None:
+            print('Пользователь с таким email уже существует.')
             flash('Пользователь с таким email уже существует.', 'error')
             return redirect(url_for('show_register_form'))
 
