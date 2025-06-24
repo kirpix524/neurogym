@@ -14,5 +14,6 @@ SQL_DATA = {
 }
 
 TEMPLATES_DIRECTORY: str = config["templates_directory"]
-LOGS_DIRECTORY = config["logs_directory"]
+STATIC_DIRECTORY: str = config["static_directory"]
+LOGS_DIRECTORY: str = config["logs_directory"]
 SECRET_KEY = config["secret_key"]

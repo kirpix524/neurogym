@@ -2,7 +2,7 @@ import os
 from flask import Flask, render_template, request, redirect, url_for, flash, session, g, Response
 from werkzeug import Response
 
-from app.config import SQL_DATA, SECRET_KEY, TEMPLATES_DIRECTORY
+from app.config import SQL_DATA, SECRET_KEY, TEMPLATES_DIRECTORY, STATIC_DIRECTORY
 
 from app.infrastructure.db.models import db, User
 
@@ -10,22 +10,23 @@ def create_app() -> Flask:
     db_file = os.path.abspath(SQL_DATA['db_path'])
     os.makedirs(os.path.dirname(db_file), exist_ok=True)
     templates_dir = os.path.join(os.path.dirname(__file__), TEMPLATES_DIRECTORY)
+    static_dir = os.path.join(os.path.dirname(__file__), STATIC_DIRECTORY)
 
-    app = Flask(__name__, template_folder=templates_dir)
-    app.config['SQLALCHEMY_DATABASE_URI'] = f"sqlite:///{db_file}"
-    app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
-    app.config['SECRET_KEY'] = SECRET_KEY
-    db.init_app(app)
+    flask_app = Flask(__name__, template_folder=templates_dir, static_folder=static_dir)
+    flask_app.config['SQLALCHEMY_DATABASE_URI'] = f"sqlite:///{db_file}"
+    flask_app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
+    flask_app.config['SECRET_KEY'] = SECRET_KEY
+    db.init_app(flask_app)
 
-    @app.route('/', methods=['GET'])
+    @flask_app.route('/', methods=['GET'])
     def home() -> str:
         return render_template('index.html')
 
-    @app.route('/signin', methods=['GET'])
+    @flask_app.route('/signin', methods=['GET'])
     def show_signin_form() -> str:
         return render_template('signin.html')
 
-    @app.route('/signin', methods=['POST'])
+    @flask_app.route('/signin', methods=['POST'])
     def signin_user() -> Response | str:
         email = request.form.get('email', '').strip().lower()
         password = request.form.get('password', '')
@@ -43,11 +44,11 @@ def create_app() -> Flask:
         flash('Вы успешно вошли!', 'success')
         return render_template('signin_success.html')
 
-    @app.route('/register', methods=['GET'])
+    @flask_app.route('/register', methods=['GET'])
     def show_register_form() -> str:
         return render_template('register.html')
 
-    @app.route('/register', methods=['POST'])
+    @flask_app.route('/register', methods=['POST'])
     def register_user() -> Response:
         email = request.form.get('email', '').strip()
         password = request.form.get('password', '')
@@ -68,27 +69,27 @@ def create_app() -> Flask:
         db.session.commit()
 
         flash('Регистрация прошла успешно! Теперь вы можете войти.', 'success')
-        return redirect(url_for('show_register_form'))
+        return redirect(url_for('show_signin_form'))
 
-    @app.route('/logout')                     # ← новый маршрут выхода
+    @flask_app.route('/logout')                     # ← новый маршрут выхода
     def logout() -> Response:
         session.pop('user_id', None)
         flash('Вы вышли из системы.', 'success')
         return redirect(url_for('home'))
 
-    @app.before_request  # ← загружаем пользователя в g
+    @flask_app.before_request  # ← загружаем пользователя в g
     def load_current_user() -> None:
         g.current_user = None
         user_id = session.get('user_id')
         if user_id is not None:
             g.current_user = User.query.get(user_id)
 
-    @app.context_processor  # ← делаем current_user доступным в шаблонах
+    @flask_app.context_processor  # ← делаем current_user доступным в шаблонах
     def inject_user():
         return dict(current_user=g.current_user)
 
 
-    return app
+    return flask_app
 
 if __name__ == '__main__':
     app = create_app()

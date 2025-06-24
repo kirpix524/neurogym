@@ -1,5 +1,6 @@
 {
   "templates_directory": "app/presentation/templates",
+  "static_directory": "app/presentation/static",
   "logs_directory": "data/logs/",
   "sqlite_database": "data/sqlite/neurogym.db",
   "users_sql_table": "users"
