@@ -1,5 +1,5 @@
 import os
-from flask import Flask, render_template, request, redirect, url_for, flash, session, Response
+from flask import Flask, render_template, request, redirect, url_for, flash, session, g, Response
 from werkzeug import Response
 
 from app.config import SQL_DATA, SECRET_KEY, TEMPLATES_DIRECTORY
@@ -39,6 +39,7 @@ def create_app() -> Flask:
             flash('Неверный email или пароль.', 'error')
             return redirect(url_for('show_signin_form'))
 
+        session['user_id'] = user.id
         flash('Вы успешно вошли!', 'success')
         return render_template('signin_success.html')
 
@@ -69,7 +70,22 @@ def create_app() -> Flask:
         flash('Регистрация прошла успешно! Теперь вы можете войти.', 'success')
         return redirect(url_for('show_register_form'))
 
+    @app.route('/logout')                     # ← новый маршрут выхода
+    def logout() -> Response:
+        session.pop('user_id', None)
+        flash('Вы вышли из системы.', 'success')
+        return redirect(url_for('home'))
 
+    @app.before_request  # ← загружаем пользователя в g
+    def load_current_user() -> None:
+        g.current_user = None
+        user_id = session.get('user_id')
+        if user_id is not None:
+            g.current_user = User.query.get(user_id)
+
+    @app.context_processor  # ← делаем current_user доступным в шаблонах
+    def inject_user():
+        return dict(current_user=g.current_user)
 
 
     return app

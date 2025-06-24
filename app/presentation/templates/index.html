@@ -7,15 +7,7 @@
 </head>
 <body class="d-flex flex-column vh-100">
 
-  <nav class="navbar navbar-expand bg-light">
-    <div class="container-fluid">
-      <span class="navbar-brand mb-0 h1">Neyro Gym</span>
-      <div class="d-flex ms-auto">
-        <a href="{{ url_for('show_register_form') }}" class="btn btn-outline-primary me-2">Регистрация</a>
-        <a href="{{ url_for('show_signin_form') }}" class="btn btn-primary">Вход</a>
-      </div>
-    </div>
-  </nav>
+  {% include '_navbar.html' %}
 
   <main class="d-flex flex-fill align-items-center justify-content-center">
     <h1 class="text-center">Neyro Gym — веб приложение для прокачки мозга</h1>
