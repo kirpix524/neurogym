@@ -1,5 +1,5 @@
 import os
-from flask import Flask, render_template, request, redirect, url_for, flash
+from flask import Flask, render_template, request, redirect, url_for, flash, session, Response
 from werkzeug import Response
 
 from app.config import SQL_DATA, SECRET_KEY, TEMPLATES_DIRECTORY
@@ -24,6 +24,23 @@ def create_app() -> Flask:
     @app.route('/signin', methods=['GET'])
     def show_signin_form() -> str:
         return render_template('signin.html')
+
+    @app.route('/signin', methods=['POST'])
+    def signin_user() -> Response | str:
+        email = request.form.get('email', '').strip().lower()
+        password = request.form.get('password', '')
+
+        if not email or not password:
+            flash('Все поля обязательны для заполнения.', 'error')
+            return redirect(url_for('show_signin_form'))
+
+        user = User.query.filter_by(email=email).first()
+        if user is None or not user.check_password(password):
+            flash('Неверный email или пароль.', 'error')
+            return redirect(url_for('show_signin_form'))
+
+        flash('Вы успешно вошли!', 'success')
+        return render_template('signin_success.html')
 
     @app.route('/register', methods=['GET'])
     def show_register_form() -> str:
