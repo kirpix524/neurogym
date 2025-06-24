@@ -88,6 +88,28 @@ def create_app() -> Flask:
     def inject_user():
         return dict(current_user=g.current_user)
 
+    @flask_app.route('/account/settings', methods=['GET'])
+    def account_settings():
+        return render_template('profile.html')
+
+    @flask_app.route('/account/data', methods=['GET'])
+    def user_data():
+        return render_template('user_data.html')
+
+    @flask_app.route('/account/training', methods=['GET'])
+    def user_trainings():
+        return render_template('user_trainings.html')
+
+    @flask_app.route('/account/mode', methods=['GET'])
+    def select_mode():
+        return render_template('select_mode.html')
+
+    @flask_app.route('/profile', methods=['GET'])
+    def profile() -> Response | str:
+        if g.current_user is None:
+            flash('Пожалуйста, войдите в систему.', 'error')
+            return redirect(url_for('show_signin_form'))
+        return redirect(url_for('account_settings'))
 
     return flask_app
 

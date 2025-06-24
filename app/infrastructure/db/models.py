@@ -27,6 +27,8 @@ class User(db.Model):
 
     @property
     def username(self) -> str:
+        if self._username is None:
+            return self._email
         return self._username
 
     @username.setter

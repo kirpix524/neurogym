@@ -1,0 +1,19 @@
+<div class="list-group">
+  <a href="{{ url_for('account_settings') }}"
+     class="list-group-item list-group-item-action {% if request.path == url_for('account_settings') %}active{% endif %}">
+    Настройки аккаунта
+  </a>
+  <a href="{{ url_for('user_data') }}"
+     class="list-group-item list-group-item-action {% if request.path == url_for('user_data') %}active{% endif %}">
+    Мои данные
+  </a>
+  <a href="{{ url_for('user_trainings') }}"
+     class="list-group-item list-group-item-action {% if request.path == url_for('user_trainings') %}active{% endif %}">
+    Мои тренировки
+  </a>
+  <a href="{{ url_for('select_mode') }}"
+     class="list-group-item list-group-item-action {% if request.path == url_for('select_mode') %}active{% endif %}">
+    Выбрать режим
+  </a>
+</div>
+
