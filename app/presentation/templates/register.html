@@ -18,16 +18,7 @@
           <div class="card-body">
             <h1 class="card-title mb-4 text-center">Регистрация</h1>
 
-            {% with messages = get_flashed_messages(with_categories=true) %}
-              {% if messages %}
-                {% for category, message in messages %}
-                  <div class="alert alert-{{ 'danger' if category=='error' else 'success' }} alert-dismissible fade show" role="alert">
-                    {{ message }}
-                    <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Закрыть"></button>
-                  </div>
-                {% endfor %}
-              {% endif %}
-            {% endwith %}
+            {% include '_messages.html' %}
 
             <form id="registerForm" action="{{ url_for('register_user') }}" method="post" class="needs-validation" novalidate>
               <div class="mb-3">
