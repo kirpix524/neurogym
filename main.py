@@ -17,6 +17,14 @@ def create_app() -> Flask:
     app.config['SECRET_KEY'] = SECRET_KEY
     db.init_app(app)
 
+    @app.route('/', methods=['GET'])
+    def home() -> str:
+        return render_template('index.html')
+
+    @app.route('/signin', methods=['GET'])
+    def show_signin_form() -> str:
+        return render_template('signin.html')
+
     @app.route('/register', methods=['GET'])
     def show_register_form() -> str:
         return render_template('register.html')
@@ -26,14 +34,11 @@ def create_app() -> Flask:
         email = request.form.get('email', '').strip()
         password = request.form.get('password', '')
 
-        print(f"email: {email}, password: {password}")
         if not email or not password:
             flash('Все поля обязательны для заполнения.', 'error')
             return redirect(url_for('show_register_form'))
 
-        chk_email = User.query.filter_by(email=email).first()
-        print(f"chk_email: {chk_email}")
-        if chk_email is not None:
+        if User.query.filter_by(email=email).first() is not None:
             print('Пользователь с таким email уже существует.')
             flash('Пользователь с таким email уже существует.', 'error')
             return redirect(url_for('show_register_form'))
@@ -46,6 +51,9 @@ def create_app() -> Flask:
 
         flash('Регистрация прошла успешно! Теперь вы можете войти.', 'success')
         return redirect(url_for('show_register_form'))
+
+
+
 
     return app
 
