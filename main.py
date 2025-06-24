@@ -42,7 +42,7 @@ def create_app() -> Flask:
 
         session['user_id'] = user.id
         flash('Вы успешно вошли!', 'success')
-        return render_template('signin_success.html')
+        return redirect(url_for('account_settings'))
 
     @flask_app.route('/register', methods=['GET'])
     def show_register_form() -> str:
@@ -88,8 +88,56 @@ def create_app() -> Flask:
     def inject_user():
         return dict(current_user=g.current_user)
 
-    @flask_app.route('/account/settings', methods=['GET'])
-    def account_settings():
+    @flask_app.route('/account/settings', methods=['GET', 'POST'])
+    def account_settings() -> Response | str:
+        if g.current_user is None:
+            flash('Пожалуйста, войдите в систему.', 'error')
+            return redirect(url_for('show_signin_form'))
+
+        if request.method == 'POST':
+            username = request.form.get('username', '').strip()
+            email = request.form.get('email', '').strip().lower()
+            old_password = request.form.get('old_password', '')
+            new_password = request.form.get('password', '')
+            confirm_password = request.form.get('password_confirm', '')
+
+            changed = False
+
+            if (email != '')and(email != g.current_user.email):
+                existing = User.query.filter_by(email=email).first()
+                if existing:
+                    flash('Пользователь с таким email уже существует.', 'error')
+                    return redirect(url_for('account_settings'))
+                g.current_user.email = email
+                changed = True
+
+            if (username != '')and(username != g.current_user.username):
+                g.current_user.username = username
+                changed = True
+
+
+            if new_password != '':
+                if not g.current_user.check_password(old_password):
+                    flash('Старый пароль указан неверно.', 'error')
+                    return redirect(url_for('account_settings'))
+
+                if new_password != confirm_password:
+                    flash('Новые пароли не совпадают.', 'error')
+                    return redirect(url_for('account_settings'))
+
+                g.current_user.password = new_password
+                changed = True
+
+            if changed:
+                db.session.commit()
+
+                flash('Настройки сохранены.', 'success')
+                return redirect(url_for('account_settings'))
+
+            else:
+                flash('Вы ничего не изменили.', 'error')
+                return redirect(url_for('account_settings'))
+
         return render_template('profile.html')
 
     @flask_app.route('/account/data', methods=['GET'])
