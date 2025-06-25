@@ -7,6 +7,8 @@ def select_mode() -> Response | str:
     """
     Отображает форму выбора режима и обрабатывает отправку.
     """
+    if 'mode' not in session:
+        session['mode'] = ModeOption.CUSTOM_INFO.value
     if request.method == 'POST':
         selected_mode: str = request.form.get('mode', '')
         session['mode'] = selected_mode  # сохраняем выбранный режим в сессии

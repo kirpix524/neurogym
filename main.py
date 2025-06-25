@@ -5,8 +5,9 @@ from werkzeug import Response
 from app.config import SQL_DATA, SECRET_KEY, TEMPLATES_DIRECTORY, STATIC_DIRECTORY
 
 from app.infrastructure.db.models import db, User
-from app.presentation.controllers.mode import bp as mode_bp
+from app.presentation.controllers.mode import bp as mode_bp, ModeOption
 from app.presentation.controllers.account_settings import bp as account_settings_bp
+from app.presentation.controllers.register import bp as register_bp
 
 
 def create_app() -> Flask:
@@ -23,6 +24,7 @@ def create_app() -> Flask:
 
     flask_app.register_blueprint(mode_bp)
     flask_app.register_blueprint(account_settings_bp)
+    flask_app.register_blueprint(register_bp)
 
     @flask_app.route('/', methods=['GET'])
     def home() -> str:
@@ -48,34 +50,7 @@ def create_app() -> Flask:
 
         session['user_id'] = user.id
         flash('Вы успешно вошли!', 'success')
-        return redirect(url_for('account_settings'))
-
-    @flask_app.route('/register', methods=['GET'])
-    def show_register_form() -> str:
-        return render_template('register.html')
-
-    @flask_app.route('/register', methods=['POST'])
-    def register_user() -> Response:
-        email = request.form.get('email', '').strip()
-        password = request.form.get('password', '')
-
-        if not email or not password:
-            flash('Все поля обязательны для заполнения.', 'error')
-            return redirect(url_for('show_register_form'))
-
-        if User.query.filter_by(email=email).first() is not None:
-            print('Пользователь с таким email уже существует.')
-            flash('Пользователь с таким email уже существует.', 'error')
-            return redirect(url_for('show_register_form'))
-
-        new_user = User(email=email)
-        new_user.password = password  # через сеттер свойство будет захешировано
-
-        db.session.add(new_user)
-        db.session.commit()
-
-        flash('Регистрация прошла успешно! Теперь вы можете войти.', 'success')
-        return redirect(url_for('show_signin_form'))
+        return redirect(url_for('account_settings.account_settings'))
 
     @flask_app.route('/logout')                     # ← новый маршрут выхода
     def logout() -> Response:
@@ -93,6 +68,11 @@ def create_app() -> Flask:
     @flask_app.context_processor  # ← делаем current_user доступным в шаблонах
     def inject_user():
         return dict(current_user=g.current_user)
+
+    @flask_app.context_processor
+    def inject_current_mode():
+        default = ModeOption.CUSTOM_INFO.value
+        return {'current_mode': session.get('mode', default)}
 
     @flask_app.route('/account/data', methods=['GET'])
     def user_data():
