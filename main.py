@@ -1,6 +1,6 @@
 import os
-from flask import Flask, render_template, request, redirect, url_for, flash, session, g, Response
-from werkzeug import Response
+from flask import Flask, session, g
+
 
 from app.config import SQL_DATA, SECRET_KEY, TEMPLATES_DIRECTORY, STATIC_DIRECTORY
 
@@ -11,6 +11,7 @@ from app.presentation.controllers.register import bp as register_bp
 from app.presentation.controllers.login import bp as login_bp
 from app.presentation.controllers.user_trainings import bp as user_trainings_bp
 from app.presentation.controllers.user_data import bp as user_data_bp
+from app.presentation.controllers.core import bp as core_bp
 
 
 def create_app() -> Flask:
@@ -25,22 +26,13 @@ def create_app() -> Flask:
     flask_app.config['SECRET_KEY'] = SECRET_KEY
     db.init_app(flask_app)
 
+    flask_app.register_blueprint(core_bp)
     flask_app.register_blueprint(mode_bp)
     flask_app.register_blueprint(account_settings_bp)
     flask_app.register_blueprint(register_bp)
     flask_app.register_blueprint(login_bp)
     flask_app.register_blueprint(user_trainings_bp)
     flask_app.register_blueprint(user_data_bp)
-
-    @flask_app.route('/', methods=['GET'])
-    def home() -> str:
-        return render_template('index.html')
-
-    @flask_app.route('/logout')                     # ← новый маршрут выхода
-    def logout() -> Response:
-        session.pop('user_id', None)
-        flash('Вы вышли из системы.', 'success')
-        return redirect(url_for('home'))
 
     @flask_app.before_request  # ← загружаем пользователя в g
     def load_current_user() -> None:

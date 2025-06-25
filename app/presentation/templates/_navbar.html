@@ -7,7 +7,7 @@
           Режим: {{ current_mode }}
         </span>
         <a href="{{ url_for('account_settings.account_settings') }}" class="btn btn-outline-secondary me-2" title="Личный кабинет">👤</a>
-        <a href="{{ url_for('logout') }}" class="btn btn-outline-danger">Выйти</a>
+        <a href="{{ url_for('core.logout') }}" class="btn btn-outline-danger">Выйти</a>
       {% else %}
         <a href="{{ url_for('register.show_register_form') }}" class="btn btn-outline-primary me-2">Регистрация</a>
         <a href="{{ url_for('login.show_login_form') }}" class="btn btn-primary">Вход</a>
