@@ -21,7 +21,7 @@
         {% include '_sidebar_menu.html' %}
       </aside>
       <section class="col-md-9 p-4">
-        <form id="registerForm" action="{{ url_for('account_settings') }}" method="post" novalidate>
+        <form id="registerForm" action="{{ url_for('account_settings.account_settings') }}" method="post" novalidate>
           <div class="mb-3">
             <label for="username" class="form-label">Имя пользователя</label>
             <input type="text" id="username" name="username" class="form-control" value="{{ current_user.username }}" required>

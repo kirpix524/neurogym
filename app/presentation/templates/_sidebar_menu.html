@@ -1,6 +1,6 @@
 <div class="list-group">
-  <a href="{{ url_for('account_settings') }}"
-     class="list-group-item list-group-item-action {% if request.path == url_for('account_settings') %}active{% endif %}">
+  <a href="{{ url_for('account_settings.account_settings') }}"
+     class="list-group-item list-group-item-action {% if request.path == url_for('account_settings.account_settings') %}active{% endif %}">
     Настройки аккаунта
   </a>
   <a href="{{ url_for('user_data') }}"

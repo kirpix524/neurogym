@@ -3,7 +3,7 @@
     <span class="navbar-brand mb-0 h1">Neyro Gym</span>
     <div class="d-flex ms-auto">
       {% if current_user %}
-        <a href="{{ url_for('profile') }}" class="btn btn-outline-secondary me-2" title="Личный кабинет">👤</a>
+        <a href="{{ url_for('account_settings.account_settings') }}" class="btn btn-outline-secondary me-2" title="Личный кабинет">👤</a>
         <a href="{{ url_for('logout') }}" class="btn btn-outline-danger">Выйти</a>
       {% else %}
         <a href="{{ url_for('show_register_form') }}" class="btn btn-outline-primary me-2">Регистрация</a>

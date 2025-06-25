@@ -5,7 +5,8 @@ from werkzeug import Response
 from app.config import SQL_DATA, SECRET_KEY, TEMPLATES_DIRECTORY, STATIC_DIRECTORY
 
 from app.infrastructure.db.models import db, User
-from app.mode.mode import bp as mode_bp
+from app.presentation.controllers.mode.mode import bp as mode_bp
+from app.presentation.controllers.account_settings.account_settings import bp as account_settings_bp
 
 
 def create_app() -> Flask:
@@ -21,6 +22,7 @@ def create_app() -> Flask:
     db.init_app(flask_app)
 
     flask_app.register_blueprint(mode_bp)
+    flask_app.register_blueprint(account_settings_bp)
 
     @flask_app.route('/', methods=['GET'])
     def home() -> str:
@@ -92,58 +94,6 @@ def create_app() -> Flask:
     def inject_user():
         return dict(current_user=g.current_user)
 
-    @flask_app.route('/account/settings', methods=['GET', 'POST'])
-    def account_settings() -> Response | str:
-        if g.current_user is None:
-            flash('Пожалуйста, войдите в систему.', 'error')
-            return redirect(url_for('show_signin_form'))
-
-        if request.method == 'POST':
-            username = request.form.get('username', '').strip()
-            email = request.form.get('email', '').strip().lower()
-            old_password = request.form.get('old_password', '')
-            new_password = request.form.get('password', '')
-            confirm_password = request.form.get('password_confirm', '')
-
-            changed = False
-
-            if (email != '')and(email != g.current_user.email):
-                existing = User.query.filter_by(email=email).first()
-                if existing:
-                    flash('Пользователь с таким email уже существует.', 'error')
-                    return redirect(url_for('account_settings'))
-                g.current_user.email = email
-                changed = True
-
-            if (username != '')and(username != g.current_user.username):
-                g.current_user.username = username
-                changed = True
-
-
-            if new_password != '':
-                if not g.current_user.check_password(old_password):
-                    flash('Старый пароль указан неверно.', 'error')
-                    return redirect(url_for('account_settings'))
-
-                if new_password != confirm_password:
-                    flash('Новые пароли не совпадают.', 'error')
-                    return redirect(url_for('account_settings'))
-
-                g.current_user.password = new_password
-                changed = True
-
-            if changed:
-                db.session.commit()
-
-                flash('Настройки сохранены.', 'success')
-                return redirect(url_for('account_settings'))
-
-            else:
-                flash('Вы ничего не изменили.', 'error')
-                return redirect(url_for('account_settings'))
-
-        return render_template('profile.html')
-
     @flask_app.route('/account/data', methods=['GET'])
     def user_data():
         return render_template('user_data.html')
@@ -152,12 +102,7 @@ def create_app() -> Flask:
     def user_trainings():
         return render_template('user_trainings.html')
 
-    @flask_app.route('/profile', methods=['GET'])
-    def profile() -> Response | str:
-        if g.current_user is None:
-            flash('Пожалуйста, войдите в систему.', 'error')
-            return redirect(url_for('show_signin_form'))
-        return redirect(url_for('account_settings'))
+
 
     return flask_app
 
