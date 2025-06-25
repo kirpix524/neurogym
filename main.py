@@ -5,8 +5,8 @@ from werkzeug import Response
 from app.config import SQL_DATA, SECRET_KEY, TEMPLATES_DIRECTORY, STATIC_DIRECTORY
 
 from app.infrastructure.db.models import db, User
-from app.presentation.controllers.mode.mode import bp as mode_bp
-from app.presentation.controllers.account_settings.account_settings import bp as account_settings_bp
+from app.presentation.controllers.mode import bp as mode_bp
+from app.presentation.controllers.account_settings import bp as account_settings_bp
 
 
 def create_app() -> Flask:

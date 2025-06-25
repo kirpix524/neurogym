@@ -1,8 +1,7 @@
 from flask import Blueprint, render_template, request, redirect, url_for, flash, g, Response
 from app.infrastructure.db.models import db
 from app.infrastructure.db.models import User
-
-bp = Blueprint('account_settings', __name__, url_prefix='/account', template_folder='templates')
+from . import bp
 
 @bp.route('/settings', methods=['GET', 'POST'])
 def account_settings() -> Response | str:
@@ -52,10 +51,3 @@ def account_settings() -> Response | str:
         return redirect(url_for('account_settings.account_settings'))
 
     return render_template('account_settings.html')
-
-# @bp.route('/profile', methods=['GET'])
-# def profile() -> Response | str:
-#     if g.current_user is None:
-#         flash('Пожалуйста, войдите в систему.', 'error')
-#         return redirect(url_for('show_signin_form'))
-#     return redirect(url_for('account_settings.account_settings'))

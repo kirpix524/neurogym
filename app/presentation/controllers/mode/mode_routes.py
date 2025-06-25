@@ -1,13 +1,6 @@
-from enum import Enum
-from flask import Blueprint, render_template, request, redirect, url_for, session
+from flask import render_template, request, redirect, url_for, session
 from werkzeug import Response
-
-
-class ModeOption(Enum):
-    CUSTOM_INFO = "Произвольная информация"
-    FOREIGN_LANGUAGES = "Иностранные языки"
-
-bp = Blueprint('mode', __name__, url_prefix='/mode', template_folder='templates')
+from . import bp, ModeOption
 
 @bp.route('/select', methods=['GET', 'POST'])
 def select_mode() -> Response | str:
