@@ -5,6 +5,8 @@ from werkzeug import Response
 from app.config import SQL_DATA, SECRET_KEY, TEMPLATES_DIRECTORY, STATIC_DIRECTORY
 
 from app.infrastructure.db.models import db, User
+from app.mode.mode import bp as mode_bp
+
 
 def create_app() -> Flask:
     db_file = os.path.abspath(SQL_DATA['db_path'])
@@ -17,6 +19,8 @@ def create_app() -> Flask:
     flask_app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
     flask_app.config['SECRET_KEY'] = SECRET_KEY
     db.init_app(flask_app)
+
+    flask_app.register_blueprint(mode_bp)
 
     @flask_app.route('/', methods=['GET'])
     def home() -> str:
@@ -147,10 +151,6 @@ def create_app() -> Flask:
     @flask_app.route('/account/training', methods=['GET'])
     def user_trainings():
         return render_template('user_trainings.html')
-
-    @flask_app.route('/account/mode', methods=['GET'])
-    def select_mode():
-        return render_template('select_mode.html')
 
     @flask_app.route('/profile', methods=['GET'])
     def profile() -> Response | str:

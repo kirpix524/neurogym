@@ -11,8 +11,8 @@
      class="list-group-item list-group-item-action {% if request.path == url_for('user_trainings') %}active{% endif %}">
     Мои тренировки
   </a>
-  <a href="{{ url_for('select_mode') }}"
-     class="list-group-item list-group-item-action {% if request.path == url_for('select_mode') %}active{% endif %}">
+  <a href="{{ url_for('mode.select_mode') }}"
+     class="list-group-item list-group-item-action {% if request.path == url_for('mode.select_mode') %}active{% endif %}">
     Выбрать режим
   </a>
 </div>

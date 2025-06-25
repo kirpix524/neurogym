@@ -21,7 +21,20 @@
         {% include '_sidebar_menu.html' %}
       </aside>
       <section class="col-md-9 p-4">
-        <!-- Интерфейс выбора режима тренировок -->
+        <form method="post" action="{{ url_for('mode.select_mode') }}">
+          <div class="mb-3">
+            <label for="mode" class="form-label">Режим:</label>
+            <select name="mode" id="mode" class="form-select">
+              {% for mode in modes %}
+                <option value="{{ mode.value }}"
+                  {% if mode.value == current_mode %}selected{% endif %}>
+                  {{ mode.value }}
+                </option>
+              {% endfor %}
+            </select>
+          </div>
+          <button type="submit" class="btn btn-primary">Подтвердить</button>
+        </form>
       </section>
     </div>
   </div>
