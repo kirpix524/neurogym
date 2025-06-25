@@ -3,11 +3,11 @@ from flask import render_template, request, redirect, url_for, flash, session, g
 from app.infrastructure.db.models import db
 from app.infrastructure.db.models import User
 
-@bp.route('/register', methods=['GET'])
+@bp.route('/', methods=['GET'])
 def show_register_form() -> str:
     return render_template('register.html')
 
-@bp.route('/register', methods=['POST'])
+@bp.route('/', methods=['POST'])
 def register_user() -> Response:
     email = request.form.get('email', '').strip()
     password = request.form.get('password', '')
@@ -27,4 +27,4 @@ def register_user() -> Response:
     db.session.commit()
 
     flash('Регистрация прошла успешно! Теперь вы можете войти.', 'success')
-    return redirect(url_for('show_signin_form'))
+    return redirect(url_for('login.show_login_form'))

@@ -8,6 +8,9 @@ from app.infrastructure.db.models import db, User
 from app.presentation.controllers.mode import bp as mode_bp, ModeOption
 from app.presentation.controllers.account_settings import bp as account_settings_bp
 from app.presentation.controllers.register import bp as register_bp
+from app.presentation.controllers.login import bp as login_bp
+from app.presentation.controllers.user_trainings import bp as user_trainings_bp
+from app.presentation.controllers.user_data import bp as user_data_bp
 
 
 def create_app() -> Flask:
@@ -25,32 +28,13 @@ def create_app() -> Flask:
     flask_app.register_blueprint(mode_bp)
     flask_app.register_blueprint(account_settings_bp)
     flask_app.register_blueprint(register_bp)
+    flask_app.register_blueprint(login_bp)
+    flask_app.register_blueprint(user_trainings_bp)
+    flask_app.register_blueprint(user_data_bp)
 
     @flask_app.route('/', methods=['GET'])
     def home() -> str:
         return render_template('index.html')
-
-    @flask_app.route('/signin', methods=['GET'])
-    def show_signin_form() -> str:
-        return render_template('signin.html')
-
-    @flask_app.route('/signin', methods=['POST'])
-    def signin_user() -> Response | str:
-        email = request.form.get('email', '').strip().lower()
-        password = request.form.get('password', '')
-
-        if not email or not password:
-            flash('Все поля обязательны для заполнения.', 'error')
-            return redirect(url_for('show_signin_form'))
-
-        user = User.query.filter_by(email=email).first()
-        if user is None or not user.check_password(password):
-            flash('Неверный email или пароль.', 'error')
-            return redirect(url_for('show_signin_form'))
-
-        session['user_id'] = user.id
-        flash('Вы успешно вошли!', 'success')
-        return redirect(url_for('account_settings.account_settings'))
 
     @flask_app.route('/logout')                     # ← новый маршрут выхода
     def logout() -> Response:
@@ -73,16 +57,6 @@ def create_app() -> Flask:
     def inject_current_mode():
         default = ModeOption.CUSTOM_INFO.value
         return {'current_mode': session.get('mode', default)}
-
-    @flask_app.route('/account/data', methods=['GET'])
-    def user_data():
-        return render_template('user_data.html')
-
-    @flask_app.route('/account/training', methods=['GET'])
-    def user_trainings():
-        return render_template('user_trainings.html')
-
-
 
     return flask_app
 

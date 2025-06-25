@@ -4,6 +4,6 @@ class ModeOption(Enum):
     CUSTOM_INFO = "Произвольная информация"
     FOREIGN_LANGUAGES = "Иностранные языки"
 
-bp = Blueprint('mode', __name__, url_prefix='/mode', template_folder='templates')
+bp = Blueprint('mode', __name__, url_prefix='/account/mode', template_folder='templates')
 
-from . import mode_routes
+from . import routes

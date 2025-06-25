@@ -1,12 +1,16 @@
-from flask import render_template, request, redirect, url_for, session
+from flask import render_template, request, redirect, url_for, session, g, flash
 from werkzeug import Response
 from . import bp, ModeOption
 
-@bp.route('/select', methods=['GET', 'POST'])
+@bp.route('/', methods=['GET', 'POST'])
 def select_mode() -> Response | str:
     """
     Отображает форму выбора режима и обрабатывает отправку.
     """
+    if g.current_user is None:
+        flash('Пожалуйста, войдите в систему.', 'error')
+        return redirect(url_for('login.show_login_form'))
+
     if 'mode' not in session:
         session['mode'] = ModeOption.CUSTOM_INFO.value
     if request.method == 'POST':

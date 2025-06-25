@@ -1,13 +1,13 @@
-from flask import Blueprint, render_template, request, redirect, url_for, flash, g, Response
+from flask import render_template, request, redirect, url_for, flash, g, Response
 from app.infrastructure.db.models import db
 from app.infrastructure.db.models import User
 from . import bp
 
-@bp.route('/settings', methods=['GET', 'POST'])
+@bp.route('/', methods=['GET', 'POST'])
 def account_settings() -> Response | str:
     if g.current_user is None:
         flash('Пожалуйста, войдите в систему.', 'error')
-        return redirect(url_for('show_signin_form'))
+        return redirect(url_for('login.show_login_form'))
 
     if request.method == 'POST':
         username: str           = request.form.get('username', '').strip()
