@@ -31,7 +31,7 @@ class ComplexElement:
         self._name = name
         self._comment = comment
         self._attributes: List[ComplexAttribute] = []
-        self._children: List[ComplexData] = []  # noqa: F821
+        self._children: List['ComplexData'] = []  # noqa: F821
 
     @property
     def content(self) -> str:
@@ -73,13 +73,13 @@ class ComplexElement:
     def get_attributes(self) -> List[ComplexAttribute]:
         return list(self._attributes)
 
-    def add_child(self, child: ComplexData) -> None:  # noqa: F821
+    def add_child(self, child: 'ComplexData') -> None:  # noqa: F821
         self._children.append(child)
 
-    def get_children(self) -> List[ComplexData]:  # noqa: F821
+    def get_children(self) -> List['ComplexData']:  # noqa: F821
         return list(self._children)
 
-    def remove_child(self, child: ComplexData) -> None:  # noqa: F821
+    def remove_child(self, child: 'ComplexData') -> None:  # noqa: F821
         self._children = [c for c in self._children if c is not child]
 
 class ComplexData:

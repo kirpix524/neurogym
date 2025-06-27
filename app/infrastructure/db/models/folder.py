@@ -16,21 +16,26 @@ class FolderModel(BaseData):
 
     _name = Column('name', String, nullable=False)
     _comment = Column('comment', String, nullable=True)
+    _owner_id = Column('owner_id', Integer, ForeignKey('users.id'), nullable=True)
     parent_folder_id = Column(Integer, ForeignKey('folders.id'), nullable=True)
 
     parent_folder = relationship(
         "FolderModel",
-        remote_side=[BaseData.id],
+        remote_side="FolderModel.id",
         backref=backref('subfolders', cascade="all, delete-orphan")
     )
     complex_data_items = relationship(
         "ComplexDataModel",
-        backref=backref('folder', cascade="all")
+        back_populates="folder",
+        foreign_keys="ComplexDataModel.folder_id"
     )
     word_pair_set_items = relationship(
         "WordPairSetModel",
-        backref=backref('folder', cascade="all")
+        back_populates="parent_folder",
+        foreign_keys="WordPairSetModel.parent_folder_id",
+        cascade="all, delete-orphan"
     )
+
 
     @property
     def name(self) -> str:
@@ -48,6 +53,14 @@ class FolderModel(BaseData):
     def comment(self, value: Optional[str]) -> None:
         self._comment = value
 
+    @property
+    def owner_id(self) -> Optional[int]:
+        return self._owner_id
+
+    @owner_id.setter
+    def owner_id(self, value: Optional[int]) -> None:
+        self._owner_id = value
+
     def to_domain(self) -> DomainFolder:
         dom = DomainFolder(name=self._name, comment=self._comment)
         for sub in self.subfolders:
@@ -61,6 +74,7 @@ class FolderModel(BaseData):
     @classmethod
     def from_domain(cls, dom: DomainFolder) -> "FolderModel":
         orm = cls(_name=dom.name, _comment=dom.comment)
+        orm.owner_id = dom.owner_id if hasattr(dom, 'owner_id') else None
         for itm in dom.get_items():
             if isinstance(itm, DomainFolder):
                 orm.subfolders.append(cls.from_domain(itm))
