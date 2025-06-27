@@ -1,5 +1,5 @@
 from sqlalchemy import Column, Integer
-from app.infrastructure.db import db
+from app.extensions import db
 
 class BaseData(db.Model):
     __abstract__ = True

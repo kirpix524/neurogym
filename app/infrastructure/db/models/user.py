@@ -3,7 +3,7 @@ from sqlalchemy.ext.hybrid import hybrid_property
 from werkzeug.security import generate_password_hash, check_password_hash
 
 from app.config import SQL_DATA
-from app.infrastructure.db import db
+from app.extensions import db
 
 
 class User(db.Model):

@@ -2,7 +2,7 @@ from sqlalchemy import Column, Integer, String, ForeignKey
 from sqlalchemy.orm import relationship
 
 from app.domain.entities.models.word_pair_set import WordPairSet as DomainWPS
-from app.infrastructure.db import db
+from app.extensions import db
 
 
 class WordPair(db.Model):
