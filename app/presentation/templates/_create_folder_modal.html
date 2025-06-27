@@ -2,8 +2,7 @@
      aria-labelledby="createFolderModalLabel" aria-hidden="true">
   <div class="modal-dialog">
     <div class="modal-content">
-      <form method="post" action="{{ url_for('create_folder') }}">
-        {{ csrf_field() }}
+      <form method="post" action="{{ url_for('data.create_folder') }}">
         <div class="modal-header">
           <h5 class="modal-title" id="createFolderModalLabel">Создать новую папку</h5>
           <button type="button" class="btn-close"

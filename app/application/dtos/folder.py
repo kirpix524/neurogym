@@ -6,7 +6,7 @@ class CreateFolderDto:
         self,
         name: str,
         comment: Optional[str],
-        owner_id: int
+        owner_id: int,
     ) -> None:
         self.name: str = name
         self.comment: Optional[str] = comment
