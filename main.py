@@ -4,7 +4,8 @@ from flask import Flask, session, g
 
 from app.config import SQL_DATA, SECRET_KEY, TEMPLATES_DIRECTORY, STATIC_DIRECTORY
 
-from app.infrastructure.db.models import db, User
+from app.infrastructure.db import db
+from app.infrastructure.db.models.user import User
 from app.presentation.controllers.mode import bp as mode_bp, ModeOption
 from app.presentation.controllers.account_settings import bp as account_settings_bp
 from app.presentation.controllers.register import bp as register_bp

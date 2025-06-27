@@ -1,5 +1,5 @@
 from flask import render_template, request, redirect, url_for, flash, session, g, Response
-from app.infrastructure.db.models import User
+from app.infrastructure.db.models.user import User
 
 from . import bp
 

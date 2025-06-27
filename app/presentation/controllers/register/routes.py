@@ -1,7 +1,8 @@
 from . import bp
 from flask import render_template, request, redirect, url_for, flash, session, g, Response
-from app.infrastructure.db.models import db
-from app.infrastructure.db.models import User
+from app.infrastructure.db.models.user import User
+from app.infrastructure.db import db
+
 
 @bp.route('/', methods=['GET'])
 def show_register_form() -> str:

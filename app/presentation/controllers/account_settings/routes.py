@@ -1,6 +1,6 @@
 from flask import render_template, request, redirect, url_for, flash, g, Response
-from app.infrastructure.db.models import db
-from app.infrastructure.db.models import User
+from app.infrastructure.db.models.user import User
+from app.infrastructure.db import db
 from . import bp
 
 @bp.route('/', methods=['GET', 'POST'])

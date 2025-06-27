@@ -1,12 +1,10 @@
 from typing import Optional
-
-from flask_sqlalchemy import SQLAlchemy
 from sqlalchemy.ext.hybrid import hybrid_property
 from werkzeug.security import generate_password_hash, check_password_hash
 
 from app.config import SQL_DATA
+from app.infrastructure.db import db
 
-db = SQLAlchemy()
 
 class User(db.Model):
     __tablename__ = SQL_DATA["users_table_name"]
