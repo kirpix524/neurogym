@@ -14,12 +14,29 @@ def user_data():
         flash('Пожалуйста, войдите в систему.', 'error')
         return redirect(url_for('login.show_login_form'))
 
+    # получаем из query-параметров id родительской папки (None для корня)
+    parent_folder_id = request.args.get('parent_id', type=int)
+
     service = DataService()
     data_units = service.get_data_units(
         owner_id=g.current_user.id,
-        parent_folder_id=None
+        parent_folder_id=parent_folder_id
     )
-    return render_template('user_data.html', data_units=data_units)
+    # формируем «хлебные крошки»
+    breadcrumbs = service.get_folder_path(
+        owner_id=g.current_user.id,
+        parent_folder_id=parent_folder_id
+    )
+    # ссылка «..» ведёт на уровень выше, если он есть
+    parent_up_id = breadcrumbs[-2].id if len(breadcrumbs) > 1 else None
+
+    return render_template(
+        'user_data.html',
+        data_units=data_units,
+        breadcrumbs=breadcrumbs,
+        parent_folder_id=parent_folder_id,
+        parent_up_id=parent_up_id
+    )
 
 @bp.route('/create_folder', methods=['POST'])
 def create_folder():

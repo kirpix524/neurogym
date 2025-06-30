@@ -13,32 +13,38 @@ class DataService:
         owner_id: int,
         parent_folder_id: Optional[int] = None
     ) -> List[DataUnitDTO]:
-        """
-        Возвращает список единиц данных текущего пользователя,
-        ограниченных по вложенности (parent_id=None — корневые папки)
-        """
         units: List[DataUnitDTO] = []
-        print(f"owner_id={owner_id}, parent_folder_id={parent_folder_id}")
         folders = (
             self._folder_model.query
             .filter_by(owner_id=owner_id, parent_folder_id=parent_folder_id)
             .all()
         )
-        units.append(DataUnitDTO(
-            icon='folder-fill',
-            name="test folder",
-            type='папка',
-            updated_at=datetime.now(),
-            last_training=None
-        ))
         for folder in folders:
             units.append(DataUnitDTO(
+                id=folder.id,
                 icon='folder-fill',
                 name=folder.name,
                 type='папка',
                 updated_at=folder.created_at,
                 last_training=None
             ))
-        #добавить обработку файловых единиц данных
         return units
+
+    def get_folder_path(
+        self,
+        owner_id: int,
+        parent_folder_id: Optional[int] = None
+    ) -> List[FolderModel]:
+        path: List[FolderModel] = []
+        if parent_folder_id is None:
+            return path
+        folder = (
+            self._folder_model.query
+            .filter_by(id=parent_folder_id, owner_id=owner_id)
+            .first()
+        )
+        while folder:
+            path.append(folder)
+            folder = folder.parent_folder
+        return list(reversed(path))
 

@@ -1,3 +1,16 @@
+{% if breadcrumbs %}
+<nav aria-label="breadcrumb">
+  <ol class="breadcrumb">
+    <li class="breadcrumb-item"><a href="{{ url_for('data.user_data') }}">Корень</a></li>
+    {% for crumb in breadcrumbs %}
+      <li class="breadcrumb-item">
+        <a href="{{ url_for('data.user_data', parent_id=crumb.id) }}">{{ crumb.name }}</a>
+      </li>
+    {% endfor %}
+  </ol>
+</nav>
+{% endif %}
+
 <table class="table align-middle">
   <thead>
     <tr>
@@ -9,12 +22,25 @@
     </tr>
   </thead>
   <tbody>
+    {% if parent_folder_id is not none %}
+      <tr>
+        <td>
+          <i class="bi bi-folder-symlink-fill text-secondary" style="font-size: 1.5rem;"></i>
+        </td>
+        <td><a href="{{ url_for('data.user_data', parent_id=parent_up_id) }}">..</a></td>
+        <td>папка</td>
+        <td></td>
+        <td></td>
+      </tr>
+    {% endif %}
     {% for unit in data_units %}
       <tr>
         <td>
           <i class="bi bi-{{ unit.icon }} text-warning" style="font-size: 1.5rem;"></i>
         </td>
-        <td>{{ unit.name }}</td>
+        <td>
+          <a href="{{ url_for('data.user_data', parent_id=unit.id) }}">{{ unit.name }}</a>
+        </td>
         <td>{{ unit.type }}</td>
         <td>{{ unit.updated_at.strftime('%d.%m.%Y %H:%M') }}</td>
         <td>
