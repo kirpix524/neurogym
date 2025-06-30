@@ -1,8 +1,7 @@
-# app/application/use_cases/update_folder.py
-
 from typing import Type, Optional
 from app.application.dtos.folder import UpdateFolderDto
-from app.infrastructure.models import FolderModel, db
+from app.infrastructure.db.models.folder import FolderModel
+from app.extensions import db
 
 class UpdateFolderUseCase:
     def __init__(

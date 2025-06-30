@@ -1,14 +1,17 @@
 from flask import render_template, redirect, url_for, flash, g, request
+from sqlalchemy import update
 from werkzeug import Response
 
-from app.application.dtos.folder import CreateFolderDto
+from app.application.dtos.folder import CreateFolderDto, UpdateFolderDto
 from app.application.use_cases.create_folder import CreateFolderUseCase
 from app.application.use_cases.delete_folder import DeleteFolderUseCase
+from app.application.use_cases.update_folder import UpdateFolderUseCase
 from app.application.use_cases.user_data import DataService
 from . import bp
 
 create_folder_uc = CreateFolderUseCase()
 delete_folder_uc = DeleteFolderUseCase()
+update_folder_uc = UpdateFolderUseCase()
 
 @bp.route('/', methods=['GET'])
 def user_data():
@@ -37,7 +40,8 @@ def user_data():
         data_units=data_units,
         breadcrumbs=breadcrumbs,
         parent_folder_id=parent_folder_id,
-        parent_up_id=parent_up_id
+        parent_up_id=parent_up_id,
+        edit_folder=None
     )
 
 @bp.route('/create_folder', methods=['POST'])
@@ -72,4 +76,30 @@ def delete_folder(folder_id: int) -> str | Response:
         flash('Папка удалена.', 'success')
     except ValueError as err:
         flash(str(err), 'danger')
+    return redirect(url_for('data.user_data', parent_id=parent_id))
+
+@bp.route('/update_folder', methods=['POST'])
+def update_folder() -> str | Response:
+    folder_id = request.form.get('folder_id', type=int)
+    parent_id = request.form.get('parent_id', type=int)
+    name = request.form.get('folder_name', '').strip()
+    comment = request.form.get('folder_comment', '').strip() or None
+
+    if not name:
+        flash('Название папки не может быть пустым.', 'danger')
+        return redirect(url_for('data.user_data', parent_id=parent_id))
+
+    dto = UpdateFolderDto(
+        id=folder_id,
+        name=name,
+        comment=comment,
+        owner_id=g.current_user.id,
+        parent_id=parent_id
+    )
+    try:
+        update_folder_uc.execute(dto)
+        flash('Папка обновлена.', 'success')
+    except ValueError as e:
+        flash(str(e), 'danger')
+
     return redirect(url_for('data.user_data', parent_id=parent_id))
