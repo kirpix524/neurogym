@@ -11,7 +11,8 @@ class CreateFolderUseCase:
         folder = FolderModel(
             name=dto.name,
             comment=dto.comment,
-            owner_id=dto.owner_id
+            owner_id=dto.owner_id,
+            parent_folder_id = dto.parent_id
         )
         self._db.session.add(folder)
         self._db.session.commit()

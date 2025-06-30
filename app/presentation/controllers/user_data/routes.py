@@ -42,13 +42,19 @@ def user_data():
 def create_folder():
     name = request.form.get('folder_name', '').strip()
     comment = request.form.get('folder_comment', '').strip() or None
+    parent_id = request.form.get('parent_id', type=int)
 
     if not name:
         flash('Название папки не может быть пустым.', 'danger')
-        return redirect(url_for('data.user_data'))
+        return redirect(url_for('data.user_data', parent_id=parent_id))
 
-    dto = CreateFolderDto(name=name, comment=comment, owner_id=g.current_user.id)
+    dto = CreateFolderDto(
+        name=name,
+        comment=comment,
+        owner_id=g.current_user.id,
+        parent_id=parent_id
+    )
     create_folder_uc.execute(dto)
 
     flash('Папка успешно создана.', 'success')
-    return redirect(url_for('data.user_data'))
+    return redirect(url_for('data.user_data', parent_id=parent_id))

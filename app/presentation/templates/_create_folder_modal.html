@@ -9,10 +9,10 @@
                   data-bs-dismiss="modal" aria-label="Закрыть"></button>
         </div>
         <div class="modal-body">
+          <input type="hidden" name="parent_id" value="{{ parent_folder_id }}">
           <div class="mb-3">
             <label for="folderName" class="form-label">Название папки</label>
-            <input type="text" class="form-control"
-                   id="folderName" name="folder_name" required>
+            <input type="text" class="form-control" id="folderName" name="folder_name" required>
           </div>
           <div class="mb-3">
             <label for="folderComment" class="form-label">Комментарий</label>
