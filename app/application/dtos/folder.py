@@ -14,6 +14,21 @@ class CreateFolderDto:
         self.owner_id: int = owner_id
         self.parent_id: Optional[int] = parent_id
 
+class UpdateFolderDto:
+    def __init__(
+        self,
+        id: int,
+        name: str,
+        comment: Optional[str],
+        owner_id: int,
+        parent_id: Optional[int] = None
+    ) -> None:
+        self.id = id
+        self.name = name
+        self.comment = comment
+        self.owner_id = owner_id
+        self.parent_id = parent_id
+
 class FolderDto:
     def __init__(
         self,

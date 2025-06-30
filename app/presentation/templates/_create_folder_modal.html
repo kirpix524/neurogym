@@ -2,30 +2,42 @@
      aria-labelledby="createFolderModalLabel" aria-hidden="true">
   <div class="modal-dialog">
     <div class="modal-content">
-      <form method="post" action="{{ url_for('data.create_folder') }}">
+      <form method="post"
+            action="{% if edit_folder %}{{ url_for('data.update_folder') }}{% else %}{{ url_for('data.create_folder') }}{% endif %}">
         <div class="modal-header">
-          <h5 class="modal-title" id="createFolderModalLabel">Создать новую папку</h5>
+          <h5 class="modal-title" id="createFolderModalLabel">
+            {% if edit_folder %}Редактировать папку{% else %}Создать новую папку{% endif %}
+          </h5>
           <button type="button" class="btn-close"
                   data-bs-dismiss="modal" aria-label="Закрыть"></button>
         </div>
         <div class="modal-body">
           <input type="hidden" name="parent_id" value="{{ parent_folder_id }}">
+          {% if edit_folder %}
+            <input type="hidden" name="folder_id" value="{{ edit_folder.id }}">
+          {% endif %}
           <div class="mb-3">
             <label for="folderName" class="form-label">Название папки</label>
-            <input type="text" class="form-control" id="folderName" name="folder_name" required>
+            <input type="text" class="form-control"
+                   id="folderName"
+                   name="folder_name"
+                   required
+                   value="{{ edit_folder.name if edit_folder else '' }}">
           </div>
           <div class="mb-3">
             <label for="folderComment" class="form-label">Комментарий</label>
             <textarea class="form-control"
                       id="folderComment"
                       name="folder_comment"
-                      rows="3"></textarea>
+                      rows="3">{{ edit_folder.comment or '' }}</textarea>
           </div>
         </div>
         <div class="modal-footer">
           <button type="button" class="btn btn-secondary"
                   data-bs-dismiss="modal">Отмена</button>
-          <button type="submit" class="btn btn-primary">Создать</button>
+          <button type="submit" class="btn btn-primary">
+            {% if edit_folder %}Сохранить{% else %}Создать{% endif %}
+          </button>
         </div>
       </form>
     </div>

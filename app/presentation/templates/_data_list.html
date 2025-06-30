@@ -19,19 +19,12 @@
       <th scope="col">Тип</th>
       <th scope="col">Изменено</th>
       <th scope="col">Последняя тренировка</th>
+      <th scope="col"></th> <!-- действия -->
     </tr>
   </thead>
   <tbody>
     {% if parent_folder_id is not none %}
-      <tr>
-        <td>
-          <i class="bi bi-folder-symlink-fill text-secondary" style="font-size: 1.5rem;"></i>
-        </td>
-        <td><a href="{{ url_for('data.user_data', parent_id=parent_up_id) }}">..</a></td>
-        <td>папка</td>
-        <td></td>
-        <td></td>
-      </tr>
+      <!-- .. -->
     {% endif %}
     {% for unit in data_units %}
       <tr>
@@ -48,7 +41,32 @@
             {{ unit.last_training.strftime('%d.%m.%Y %H:%M') }}
           {% endif %}
         </td>
+        <td>
+          <div class="dropdown">
+            <button class="btn btn-sm btn-secondary dropdown-toggle" type="button"
+                    id="dropdownMenuButton{{ unit.id }}"
+                    data-bs-toggle="dropdown"
+                    aria-expanded="false">
+              …
+            </button>
+            <ul class="dropdown-menu" aria-labelledby="dropdownMenuButton{{ unit.id }}">
+              <li>
+                <a class="dropdown-item"
+                   href="{{ url_for('data.edit_folder', folder_id=unit.id, parent_id=parent_folder_id) }}">
+                  Редактировать папку
+                </a>
+              </li>
+              <li>
+                <form action="{{ url_for('data.delete_folder', folder_id=unit.id, parent_id=parent_folder_id) }}"
+                      method="post" class="m-0 p-0">
+                  <button type="submit" class="dropdown-item">Удалить папку</button>
+                </form>
+              </li>
+            </ul>
+          </div>
+        </td>
       </tr>
     {% endfor %}
   </tbody>
 </table>
+
