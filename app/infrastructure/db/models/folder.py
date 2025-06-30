@@ -1,5 +1,6 @@
 from typing import Optional
 from sqlalchemy import Column, Integer, String, ForeignKey, JSON
+from sqlalchemy.ext.hybrid import hybrid_property
 from sqlalchemy.orm import relationship, backref
 from datetime import datetime
 from sqlalchemy import DateTime
@@ -19,12 +20,7 @@ class FolderModel(BaseData):
     _name = Column('name', String, nullable=False)
     _comment = Column('comment', String, nullable=True)
     _owner_id = Column('owner_id', Integer, ForeignKey('users.id'), nullable=True)
-    _created_at = Column(
-        'created_at',
-        DateTime,
-        default=datetime.now(),
-        nullable=False
-    )
+    _created_at = Column('created_at',DateTime,default=datetime.now(),nullable=False)
     parent_folder_id = Column(Integer, ForeignKey('folders.id'), nullable=True)
     parent_folder = relationship(
         "FolderModel",
@@ -60,13 +56,17 @@ class FolderModel(BaseData):
     def comment(self, value: Optional[str]) -> None:
         self._comment = value
 
-    @property
+    @hybrid_property
     def owner_id(self) -> Optional[int]:
         return self._owner_id
 
     @owner_id.setter
     def owner_id(self, value: Optional[int]) -> None:
         self._owner_id = value
+
+    @owner_id.expression   # type: ignore[attr-defined]
+    def owner_id(cls):
+        return cls._owner_id
 
     @property
     def created_at(self) -> datetime:

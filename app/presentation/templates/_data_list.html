@@ -1,0 +1,28 @@
+<table class="table align-middle">
+  <thead>
+    <tr>
+      <th></th>
+      <th scope="col">Название</th>
+      <th scope="col">Тип</th>
+      <th scope="col">Изменено</th>
+      <th scope="col">Последняя тренировка</th>
+    </tr>
+  </thead>
+  <tbody>
+    {% for unit in data_units %}
+      <tr>
+        <td>
+          <i class="bi bi-{{ unit.icon }} text-warning" style="font-size: 1.5rem;"></i>
+        </td>
+        <td>{{ unit.name }}</td>
+        <td>{{ unit.type }}</td>
+        <td>{{ unit.updated_at.strftime('%d.%m.%Y %H:%M') }}</td>
+        <td>
+          {% if unit.last_training %}
+            {{ unit.last_training.strftime('%d.%m.%Y %H:%M') }}
+          {% endif %}
+        </td>
+      </tr>
+    {% endfor %}
+  </tbody>
+</table>

@@ -3,6 +3,7 @@ from datetime import datetime
 from flask import render_template, redirect, url_for, flash, g, request
 from app.application.dtos.folder import CreateFolderDto
 from app.application.use_cases.create_folder import CreateFolderUseCase
+from app.application.use_cases.user_data import DataService
 from . import bp
 
 create_folder_uc = CreateFolderUseCase()
@@ -13,7 +14,12 @@ def user_data():
         flash('Пожалуйста, войдите в систему.', 'error')
         return redirect(url_for('login.show_login_form'))
 
-    return render_template('user_data.html')
+    service = DataService()
+    data_units = service.get_data_units(
+        owner_id=g.current_user.id,
+        parent_folder_id=None
+    )
+    return render_template('user_data.html', data_units=data_units)
 
 @bp.route('/create_folder', methods=['POST'])
 def create_folder():
