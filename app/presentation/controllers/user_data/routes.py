@@ -2,8 +2,12 @@ from flask import render_template, redirect, url_for, flash, g, request
 from sqlalchemy import update
 from werkzeug import Response
 
+from app.application.dtos.complex_data import CreateComplexDataDto
 from app.application.dtos.folder import CreateFolderDto, UpdateFolderDto
+from app.application.dtos.word_pair_set import CreateWordPairSetDto
+from app.application.use_cases.create_complex_data import CreateComplexDataUseCase
 from app.application.use_cases.create_folder import CreateFolderUseCase
+from app.application.use_cases.create_word_pair_set import CreateWordPairSetUseCase
 from app.application.use_cases.delete_folder import DeleteFolderUseCase
 from app.application.use_cases.update_folder import UpdateFolderUseCase
 from app.application.use_cases.user_data import DataService
@@ -12,6 +16,8 @@ from . import bp
 create_folder_uc = CreateFolderUseCase()
 delete_folder_uc = DeleteFolderUseCase()
 update_folder_uc = UpdateFolderUseCase()
+word_pair_uc = CreateWordPairSetUseCase()
+complex_data_uc = CreateComplexDataUseCase()
 
 @bp.route('/', methods=['GET'])
 def user_data():
@@ -107,3 +113,29 @@ def update_folder() -> str | Response:
         flash(str(e), 'danger')
 
     return redirect(url_for('data.user_data', parent_id=parent_id))
+
+@bp.route('/create_data_item', methods=['POST'])
+def create_data_item():
+    name = request.form.get('data_name', '').strip()
+    comment = request.form.get('data_comment', '').strip() or None
+    data_type = request.form.get('data_type')
+    parent_folder_id = request.form.get('parent_folder_id') or None
+    parent_folder_id = int(parent_folder_id) if parent_folder_id else None
+
+    if not name:
+        flash('Название не может быть пустым.', 'danger')
+        return redirect(url_for('data.user_data', parent_folder_id=parent_folder_id))
+
+    owner_id = g.current_user.id
+    if data_type == 'word_pair_set':
+        dto = CreateWordPairSetDto(name, comment, parent_folder_id, owner_id)
+        word_pair_uc.execute(dto)
+        flash('Набор пар слов создан.', 'success')
+    elif data_type == 'complex_data':
+        dto = CreateComplexDataDto(name, comment, parent_folder_id, owner_id)
+        complex_data_uc.execute(dto)
+        flash('Комплексные данные созданы.', 'success')
+    else:
+        flash('Неизвестный тип данных.', 'danger')
+
+    return redirect(url_for('data.user_data', parent_folder_id=parent_folder_id))

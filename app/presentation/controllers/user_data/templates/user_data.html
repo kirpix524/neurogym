@@ -24,21 +24,13 @@
       <section class="col-md-9 p-4">
 
         {% include '_data_list.html' %}
-        <div class="d-flex justify-content-end mb-4">
-          <button type="button"
-                  class="btn btn-primary rounded-circle"
-                  data-bs-toggle="modal"
-                  data-bs-target="#createFolderModal"
-                  data-parent-id="{{ parent_folder_id or '' }}"
-                  style="width: 48px; height: 48px;">
-            <i class="bi bi-folder-plus" style="font-size: 1.5rem;"></i>
-          </button>
-        </div>
+        {% include '_add_folder_and_data_item_buttons.html' %}
       </section>
     </div>
   </div>
 
   {% include '_create_folder_modal.html' %}
+  {% include '_create_data_modal.html' %}
 
   <script>
     document.addEventListener('DOMContentLoaded', function () {

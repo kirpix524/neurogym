@@ -1,0 +1,36 @@
+<div class="modal fade" id="createDataModal" tabindex="-1"
+     aria-labelledby="createDataModalLabel" aria-hidden="true">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <form method="post" action="{{ url_for('data.create_data_item') }}">
+        <input type="hidden" name="data_type" id="dataTypeInput">
+        <input type="hidden" name="parent_folder_id" id="dataParentInput">
+        <div class="modal-header">
+          <h5 class="modal-title" id="createDataModalLabel">Создать элемент</h5>
+          <button type="button" class="btn-close"
+                  data-bs-dismiss="modal" aria-label="Закрыть"></button>
+        </div>
+        <div class="modal-body">
+          <div class="mb-3">
+            <label for="dataName" class="form-label" id="dataNameLabel">Имя</label>
+            <input type="text" class="form-control"
+                   id="dataName" name="data_name" required>
+          </div>
+          <div class="mb-3">
+            <label for="dataComment" class="form-label">Комментарий</label>
+            <textarea class="form-control"
+                      id="dataComment"
+                      name="data_comment"
+                      rows="3"></textarea>
+          </div>
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-secondary"
+                  data-bs-dismiss="modal">Отмена</button>
+          <button type="submit" class="btn btn-primary">Создать</button>
+        </div>
+      </form>
+    </div>
+  </div>
+</div>
+<script src="{{ url_for('static', filename='js/create_data_modal.js') }}"></script>
