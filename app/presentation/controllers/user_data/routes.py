@@ -1,5 +1,4 @@
 from flask import render_template, redirect, url_for, flash, g, request
-from sqlalchemy import update
 from werkzeug import Response
 
 from app.application.dtos.complex_data import CreateComplexDataDto
