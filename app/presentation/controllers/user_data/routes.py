@@ -124,7 +124,7 @@ def create_data_item():
 
     if not name:
         flash('Название не может быть пустым.', 'danger')
-        return redirect(url_for('data.user_data', parent_folder_id=parent_folder_id))
+        return redirect(url_for('data.user_data', parent_id=parent_folder_id))
 
     owner_id = g.current_user.id
     if data_type == 'word_pair_set':
@@ -138,4 +138,4 @@ def create_data_item():
     else:
         flash('Неизвестный тип данных.', 'danger')
 
-    return redirect(url_for('data.user_data', parent_folder_id=parent_folder_id))
+    return redirect(url_for('data.user_data', parent_id=parent_folder_id))
