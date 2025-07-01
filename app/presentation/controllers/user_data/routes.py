@@ -60,7 +60,11 @@ def create_folder():
         owner_id=g.current_user.id,
         parent_id=parent_id
     )
-    create_folder_uc.execute(dto)
+    try:
+        create_folder_uc.execute(dto)
+    except ValueError as err:
+        flash(str(err), 'danger')
+        return redirect(url_for('data.user_data', parent_id=parent_id))
 
     flash('Папка успешно создана.', 'success')
     return redirect(url_for('data.user_data', parent_id=parent_id))

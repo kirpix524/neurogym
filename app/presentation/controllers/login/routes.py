@@ -14,12 +14,12 @@ def login() -> Response | str:
 
     if not email or not password:
         flash('Все поля обязательны для заполнения.', 'error')
-        return redirect(url_for('show_login_form'))
+        return redirect(url_for('login.show_login_form'))
 
     user = User.query.filter_by(email=email).first()
     if user is None or not user.check_password(password):
         flash('Неверный email или пароль.', 'error')
-        return redirect(url_for('show_login_form'))
+        return redirect(url_for('login.show_login_form'))
 
     session['user_id'] = user.id
     flash('Вы успешно вошли!', 'success')

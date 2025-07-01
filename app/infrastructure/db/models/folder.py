@@ -17,10 +17,10 @@ from app.infrastructure.db.models.complex_data import ComplexDataModel
 class FolderModel(BaseData):
     __tablename__ = 'folders'
 
-    _name = Column('name', String, nullable=False)
-    _comment = Column('comment', String, nullable=True)
-    _owner_id = Column('owner_id', Integer, ForeignKey('users.id'), nullable=True)
-    _created_at = Column('created_at',DateTime,default=datetime.now(),nullable=False)
+    name = Column('name', String, nullable=False)
+    comment = Column('comment', String, nullable=True)
+    owner_id = Column('owner_id', Integer, ForeignKey('users.id'), nullable=True)
+    created_at = Column('created_at',DateTime,default=datetime.now,nullable=False)
     parent_folder_id = Column(Integer, ForeignKey('folders.id'), nullable=True)
     parent_folder = relationship(
         "FolderModel",
@@ -38,43 +38,6 @@ class FolderModel(BaseData):
         foreign_keys="WordPairSetModel.parent_folder_id",
         cascade="all, delete-orphan"
     )
-
-
-    @property
-    def name(self) -> str:
-        return self._name
-
-    @name.setter
-    def name(self, value: str) -> None:
-        self._name = value
-
-    @property
-    def comment(self) -> Optional[str]:
-        return self._comment
-
-    @comment.setter
-    def comment(self, value: Optional[str]) -> None:
-        self._comment = value
-
-    @hybrid_property
-    def owner_id(self) -> Optional[int]:
-        return self._owner_id
-
-    @owner_id.setter
-    def owner_id(self, value: Optional[int]) -> None:
-        self._owner_id = value
-
-    @owner_id.expression   # type: ignore[attr-defined]
-    def owner_id(cls):
-        return cls._owner_id
-
-    @property
-    def created_at(self) -> datetime:
-        return self._created_at
-
-    @created_at.setter
-    def created_at(self, value: datetime) -> None:
-        self._created_at = value
 
     def to_domain(self) -> DomainFolder:
         dom = DomainFolder(name=self._name, comment=self._comment)

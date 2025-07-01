@@ -8,6 +8,19 @@ class CreateFolderUseCase:
         self._db = db
 
     def execute(self, dto: CreateFolderDto) -> FolderDto:
+        duplicate = (
+            self._db.session.query(FolderModel)
+            .filter_by(
+                name=dto.name,
+                owner_id=dto.owner_id,
+                parent_folder_id=dto.parent_id
+            )
+            .first()
+        )
+        if duplicate:
+            raise ValueError("Папка с таким названием уже существует.")
+
+
         folder = FolderModel(
             name=dto.name,
             comment=dto.comment,
