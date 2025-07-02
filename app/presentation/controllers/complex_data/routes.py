@@ -1,6 +1,7 @@
 from flask import render_template, g, redirect, url_for, flash
 from . import bp
 from app.infrastructure.db.models.complex_data import ComplexDataModel
+from app.common_utils import get_folder_path
 
 @bp.route('/<int:data_id>', methods=['GET'])
 def view_complex_data(data_id: int):
@@ -20,11 +21,7 @@ def view_complex_data(data_id: int):
         return redirect(url_for('data.user_data'))
 
     # 3. Собираем путь (breadcrumb) до папки
-    folders_path = []
-    folder = complex_data.folder
-    while folder:
-        folders_path.insert(0, folder)
-        folder = folder.parent_folder
+    folders_path = get_folder_path(complex_data.folder)
 
     return render_template(
         'complex_data.html',

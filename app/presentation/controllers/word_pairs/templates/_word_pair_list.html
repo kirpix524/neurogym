@@ -1,0 +1,49 @@
+<table class="table table-striped align-middle">
+  <thead>
+    <tr>
+      <th scope="col">#</th>
+      <th scope="col">Слово 1</th>
+      <th scope="col">Слово 2</th>
+      <th scope="col" class="text-end">Действия</th>
+    </tr>
+  </thead>
+  <tbody>
+    {% for pair in pairs %}
+      <tr>
+        <th scope="row">{{ loop.index }}</th>
+        <td>{{ pair.key }}</td>
+        <td>{{ pair.value }}</td>
+        <td class="text-end">
+          <!-- Кнопка редактирования пары -->
+          <button
+            type="button"
+            class="btn btn-sm btn-outline-secondary me-2"
+            data-bs-toggle="modal"
+            data-bs-target="#editWordPairModal"
+            data-pair-id="{{ pair.id }}"
+            data-word1="{{ pair.key }}"
+            data-word2="{{ pair.value }}"
+          >
+            <i class="bi bi-pencil"></i>
+          </button>
+
+          <!-- Форма удаления пары -->
+          <form
+            action="{{ url_for('word_pairs.delete_pair', pair_id=pair.id, set_id=word_set.id) }}"
+            method="post"
+            class="d-inline"
+            onsubmit="return confirm('Удалить эту пару слов?');"
+          >
+            <button type="submit" class="btn btn-sm btn-outline-danger">
+              <i class="bi bi-trash"></i>
+            </button>
+          </form>
+        </td>
+      </tr>
+    {% else %}
+      <tr>
+        <td colspan="4" class="text-center">Пары слов отсутствуют.</td>
+      </tr>
+    {% endfor %}
+  </tbody>
+</table>
