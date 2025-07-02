@@ -1,0 +1,18 @@
+<div class="dropdown">
+    <button class="btn btn-sm btn-secondary dropdown-toggle" type="button"
+            id="dropdownMenuButton{{ unit.id }}"
+            data-bs-toggle="dropdown"
+            aria-expanded="false">
+      …
+    </button>
+    <ul class="dropdown-menu" aria-labelledby="dropdownMenuButton{{ unit.id }}">
+      <li>
+        <form action="{{ url_for('data.delete_data_item', item_id=unit.id, item_type=unit.type, parent_id=parent_folder_id) }}"
+              method="post"
+              class="m-0 p-0"
+              onsubmit="return confirm('Вы уверены, что хотите удалить элемент данных?');">
+          <button type="submit" class="dropdown-item">Удалить элемент</button>
+        </form>
+      </li>
+    </ul>
+</div>

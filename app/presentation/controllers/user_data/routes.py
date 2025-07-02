@@ -7,7 +7,9 @@ from app.application.dtos.word_pair_set import CreateWordPairSetDto
 from app.application.use_cases.create_complex_data import CreateComplexDataUseCase
 from app.application.use_cases.create_folder import CreateFolderUseCase
 from app.application.use_cases.create_word_pair_set import CreateWordPairSetUseCase
+from app.application.use_cases.delete_complex_data import DeleteComplexDataUseCase
 from app.application.use_cases.delete_folder import DeleteFolderUseCase
+from app.application.use_cases.delete_pair_set import DeleteWordPairSetUseCase
 from app.application.use_cases.update_folder import UpdateFolderUseCase
 from app.application.use_cases.user_data import DataService
 from . import bp
@@ -17,6 +19,8 @@ delete_folder_uc = DeleteFolderUseCase()
 update_folder_uc = UpdateFolderUseCase()
 word_pair_uc = CreateWordPairSetUseCase()
 complex_data_uc = CreateComplexDataUseCase()
+delete_pairs_uc = DeleteWordPairSetUseCase()
+delete_complex_data_uc = DeleteComplexDataUseCase()
 
 @bp.route('/', methods=['GET'])
 def user_data():
@@ -138,3 +142,26 @@ def create_data_item():
         flash('Неизвестный тип данных.', 'danger')
 
     return redirect(url_for('data.user_data', parent_id=parent_folder_id))
+
+@bp.route('/delete_item/<int:item_id>', methods=['POST'])
+def delete_data_item(item_id: int) -> str | Response:
+    parent_id = request.args.get('parent_id', type=int)
+    item_type = request.args.get('item_type', type=str)
+    try:
+        if item_type == 'пары слов':
+            delete_pairs_uc.execute(
+                item_id=item_id,
+                owner_id=g.current_user.id
+            )
+            flash('Набор пар слов удален.', 'success')
+            return redirect(url_for('data.user_data', parent_id=parent_id))
+        if item_type == 'комплексные данные':
+            delete_complex_data_uc.execute(
+                item_id=item_id,
+                owner_id=g.current_user.id
+            )
+            flash('Комплексные данные удалены.', 'success')
+            return redirect(url_for('data.user_data', parent_id=parent_id))
+    except ValueError as err:
+        flash(str(err), 'danger')
+    return redirect(url_for('data.user_data', parent_id=parent_id))

@@ -1,0 +1,32 @@
+<div class="dropdown">
+    <button class="btn btn-sm btn-secondary dropdown-toggle" type="button"
+            id="dropdownMenuButton{{ unit.id }}"
+            data-bs-toggle="dropdown"
+            aria-expanded="false">
+      …
+    </button>
+    <ul class="dropdown-menu" aria-labelledby="dropdownMenuButton{{ unit.id }}">
+      <li>
+        <button
+          class="dropdown-item"
+          type="button"
+          data-bs-toggle="modal"
+          data-bs-target="#createFolderModal"
+          data-folder-id="{{ unit.id }}"
+          data-parent-id="{{ parent_folder_id }}"
+          data-folder-name="{{ unit.name }}"
+          data-folder-comment="{{ unit.comment or '' }}"
+        >
+          Редактировать папку
+        </button>
+      </li>
+      <li>
+        <form action="{{ url_for('data.delete_folder', folder_id=unit.id, parent_id=parent_folder_id) }}"
+              method="post"
+              class="m-0 p-0"
+              onsubmit="return confirm('Вы уверены, что хотите удалить папку?');">
+          <button type="submit" class="dropdown-item">Удалить папку</button>
+        </form>
+      </li>
+    </ul>
+</div>
