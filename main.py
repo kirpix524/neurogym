@@ -13,6 +13,7 @@ from app.presentation.controllers.login import bp as login_bp
 from app.presentation.controllers.user_trainings import bp as user_trainings_bp
 from app.presentation.controllers.user_data import bp as user_data_bp
 from app.presentation.controllers.core import bp as core_bp
+from app.presentation.controllers.word_pairs import bp as word_pairs_bp
 
 
 def create_app() -> Flask:
@@ -34,6 +35,7 @@ def create_app() -> Flask:
     flask_app.register_blueprint(login_bp)
     flask_app.register_blueprint(user_trainings_bp)
     flask_app.register_blueprint(user_data_bp)
+    flask_app.register_blueprint(word_pairs_bp)
 
     @flask_app.before_request  # ← загружаем пользователя в g
     def load_current_user() -> None:

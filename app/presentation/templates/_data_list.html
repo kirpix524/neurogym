@@ -32,7 +32,27 @@
           <i class="bi bi-{{ unit.icon }} text-warning" style="font-size: 1.5rem;"></i>
         </td>
         <td>
-          <a href="{{ url_for('data.user_data', parent_id=unit.id) }}">{{ unit.name }}</a>
+          {# если папка — открываем её содержимое #}
+          {% if unit.type == 'папка' %}
+            <a href="{{ url_for('data.user_data', parent_id=unit.id) }}">
+              {{ unit.name }}
+            </a>
+
+          {# если набор пар слов — на страницу просмотра word_pairs #}
+          {% elif unit.type == 'пары слов' %}
+            <a href="{{ url_for('word_pairs.view_word_pair_set', set_id=unit.id) }}">
+              {{ unit.name }}
+            </a>
+
+          {# если комплексные данные — на страницу просмотра complex_data #}
+          {% elif unit.type == 'комплексные данные' %}
+            <a href="{{ url_for('complex_data.view_complex_data', data_id=unit.id) }}">
+              {{ unit.name }}
+            </a>
+
+          {% else %}
+            {{ unit.name }}
+          {% endif %}
         </td>
         <td>{{ unit.type }}</td>
         <td>{{ unit.updated_at.strftime('%d.%m.%Y %H:%M') }}</td>
