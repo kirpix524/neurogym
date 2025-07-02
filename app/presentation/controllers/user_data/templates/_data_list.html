@@ -34,19 +34,19 @@
         <td>
           {# если папка — открываем её содержимое #}
           {% if unit.type == 'папка' %}
-            <a href="{{ url_for('data.user_data', parent_id=unit.id) }}">
+            <a href="{{ url_for('data.user_data', parent_id=unit.id) }}" title="{{ unit.comment }}">
               {{ unit.name }}
             </a>
 
           {# если набор пар слов — на страницу просмотра word_pairs #}
           {% elif unit.type == 'пары слов' %}
-            <a href="{{ url_for('word_pairs.view_word_pair_set', set_id=unit.id) }}">
+            <a href="{{ url_for('word_pairs.view_word_pair_set', set_id=unit.id) }}" title="{{ unit.comment }}">
               {{ unit.name }}
             </a>
 
           {# если комплексные данные — на страницу просмотра complex_data #}
           {% elif unit.type == 'комплексные данные' %}
-            <a href="{{ url_for('complex_data.view_complex_data', data_id=unit.id) }}">
+            <a href="{{ url_for('complex_data.view_complex_data', data_id=unit.id) }}" title="{{ unit.comment }}">
               {{ unit.name }}
             </a>
 

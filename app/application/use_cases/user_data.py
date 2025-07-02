@@ -30,6 +30,7 @@ class DataService:
                 icon='folder-fill',
                 name=folder.name,
                 type='папка',
+                comment=folder.comment,
                 updated_at=folder.created_at,
                 last_training=None
             ))
@@ -46,6 +47,7 @@ class DataService:
                 icon='file-earmark-text-fill',
                 name=wp.name,
                 type='пары слов',
+                comment=wp.comment,
                 updated_at=wp.created_at,
                 last_training=wp.last_training if hasattr(wp, 'last_training') else None
             ))
@@ -62,6 +64,7 @@ class DataService:
                 icon='file-earmark-code-fill',
                 name=cd.name,
                 type='комплексные данные',
+                comment=cd.comment,
                 updated_at=cd.created_at,
                 last_training=None
             ))

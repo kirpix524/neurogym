@@ -10,43 +10,42 @@
     <div class="modal-content">
       <form id="folderForm"
             method="post"
-            action="{% if edit_folder %}{{ url_for('data.update_folder') }}{% else %}{{ url_for('data.create_folder') }}{% endif %}">
+            action="{{ url_for('data.create_folder') }}">
         <div class="modal-header">
           <h5 class="modal-title" id="createFolderModalLabel">
-            {% if edit_folder %}Редактировать папку{% else %}Создать новую папку{% endif %}
+            Создать новую папку
           </h5>
           <button type="button" class="btn-close"
                   data-bs-dismiss="modal" aria-label="Закрыть"></button>
         </div>
         <div class="modal-body">
           <input type="hidden" name="parent_id" id="parentIdInput" value="{{ parent_folder_id or '' }}">
-          <input type="hidden" name="folder_id" id="folderIdInput" value="{{ edit_folder.id if edit_folder else '' }}">
-
+          <input type="hidden" name="folder_id" id="folderIdInput" value="">
           <div class="mb-3">
             <label for="folderName" class="form-label">Название папки</label>
             <input type="text" class="form-control"
                    id="folderName"
                    name="folder_name"
                    required
-                   value="{{ edit_folder.name if edit_folder else '' }}">
+                   value="">
           </div>
           <div class="mb-3">
             <label for="folderComment" class="form-label">Комментарий</label>
             <textarea class="form-control"
                       id="folderComment"
                       name="folder_comment"
-                      rows="3">{{ edit_folder.comment or '' if edit_folder else '' }}</textarea>
+                      rows="3"></textarea>
           </div>
         </div>
         <div class="modal-footer">
           <button type="button" class="btn btn-secondary"
                   data-bs-dismiss="modal">Отмена</button>
           <button type="submit" class="btn btn-primary" id="folderSubmitBtn">
-            {% if edit_folder %}Сохранить{% else %}Создать{% endif %}
+            Создать
           </button>
         </div>
       </form>
     </div>
   </div>
 </div>
-<script src="{{ url_for('static', filename='js/fill_create_folder_form.js') }}"></script>
+<script src="{{ url_for('data.static', filename='js/fill_create_folder_form.js') }}"></script>
