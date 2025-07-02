@@ -1,0 +1,27 @@
+<!-- Модалка создания новой пары слов -->
+  <div class="modal fade" id="createWordPairModal" tabindex="-1" aria-labelledby="createWordPairModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+      <div class="modal-content">
+        <form action="{{ url_for('word_pairs.create_pair', set_id=word_set.id) }}" method="post">
+          <div class="modal-header">
+            <h5 class="modal-title" id="createWordPairModalLabel">Новая пара слов</h5>
+            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Закрыть"></button>
+          </div>
+          <div class="modal-body">
+            <div class="mb-3">
+              <label for="word1" class="form-label">Слово 1</label>
+              <input type="text" class="form-control" id="word1" name="word1" required>
+            </div>
+            <div class="mb-3">
+              <label for="word2" class="form-label">Слово 2</label>
+              <input type="text" class="form-control" id="word2" name="word2" required>
+            </div>
+          </div>
+          <div class="modal-footer">
+            <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Отмена</button>
+            <button type="submit" class="btn btn-success">Добавить</button>
+          </div>
+        </form>
+      </div>
+    </div>
+  </div>>

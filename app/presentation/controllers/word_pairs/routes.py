@@ -1,6 +1,11 @@
-from flask import render_template, g, redirect, url_for, flash
+from flask import render_template, g, redirect, url_for, flash, Response, request
+
+from app.application.dtos.word_pair import CreateWordPairDto
+from app.application.use_cases.create_word_pair import CreateWordPairUseCase
 from . import bp
 from app.infrastructure.db.models.word_pairs import WordPairSetModel
+
+create_pair_uc = CreateWordPairUseCase()
 
 @bp.route('/<int:set_id>', methods=['GET'])
 def view_word_pair_set(set_id):
@@ -31,3 +36,27 @@ def view_word_pair_set(set_id):
         word_set=word_set,
         folders_path=folders_path
     )
+
+@bp.route('/<int:set_id>/create_pair', methods=['POST'])
+def create_pair(set_id: int) -> str | Response:
+    # Получаем данные из формы
+    word1 = request.form.get('word1', '').strip()
+    word2 = request.form.get('word2', '').strip()
+    owner_id = g.current_user.id
+
+    # Формируем DTO
+    dto = CreateWordPairDto(
+        key=word1,
+        value=word2,
+        set_id=set_id
+    )
+
+    # Выполняем UseCase
+    try:
+        create_pair_uc.execute(dto)
+        flash('Пара слов успешно добавлена.', 'success')
+    except ValueError as err:
+        flash(str(err), 'danger')
+
+    # Перенаправляем обратно на страницу набора
+    return redirect(url_for('word_pairs.view_word_pair_set', set_id=set_id))

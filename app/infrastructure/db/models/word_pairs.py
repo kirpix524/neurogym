@@ -7,7 +7,7 @@ from app.domain.entities.models.word_pair_set import WordPairSet as DomainWPS
 from app.infrastructure.db.models.base_data import BaseData
 
 
-class WordPair(BaseData):
+class WordPairModel(BaseData):
     __tablename__ = 'word_pairs'
     id = Column(Integer, primary_key=True)
     key = Column('key', String, nullable=False)
@@ -27,7 +27,7 @@ class WordPairSetModel(BaseData):
     owner_id = Column('owner_id', Integer, ForeignKey('users.id'), nullable=True)
     parent_folder_id = Column('parent_folder_id',Integer,ForeignKey('folders.id'),nullable=True)
     pairs = relationship(
-        "WordPair",
+        "WordPairModel",
         back_populates="parent",
         cascade="all, delete-orphan"
     )
@@ -48,6 +48,6 @@ class WordPairSetModel(BaseData):
         orm = cls(name=dom.name, comment=dom.comment)
         orm.owner_id = None
         for key, value in dom.pairs:
-            wp = WordPair(key=key, value=value)
+            wp = WordPairModel(key=key, value=value)
             orm.pairs.append(wp)
         return orm
