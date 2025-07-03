@@ -1,27 +1,31 @@
-<!-- Модалка создания новой пары слов -->
-  <div class="modal fade" id="createWordPairModal" tabindex="-1" aria-labelledby="createWordPairModalLabel" aria-hidden="true">
-    <div class="modal-dialog">
-      <div class="modal-content">
-        <form action="{{ url_for('word_pairs.create_pair', set_id=word_set.id) }}" method="post">
-          <div class="modal-header">
-            <h5 class="modal-title" id="createWordPairModalLabel">Новая пара слов</h5>
-            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Закрыть"></button>
+<!-- Модалка создания или редактирования новой пары слов -->
+<div class="modal fade" id="wordPairModal" tabindex="-1" aria-labelledby="wordPairModalLabel" aria-hidden="true"
+     data-create-url="{{ url_for('word_pairs.create_pair', set_id=word_set.id) }}"
+     data-update-url="{{ url_for('word_pairs.update_pair', set_id=word_set.id, pair_id=-1) }}">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <form id="wordPairForm" method="post" action="">
+        <div class="modal-header">
+          <h5 class="modal-title" id="wordPairModalLabel">Новая пара слов</h5>
+          <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Закрыть"></button>
+        </div>
+        <div class="modal-body">
+          <input type="hidden" name="pair_id" id="pairIdInput" value="">
+          <div class="mb-3">
+            <label for="word1" class="form-label">Слово 1</label>
+            <input type="text" class="form-control" id="word1" name="word1" required>
           </div>
-          <div class="modal-body">
-            <div class="mb-3">
-              <label for="word1" class="form-label">Слово 1</label>
-              <input type="text" class="form-control" id="word1" name="word1" required>
-            </div>
-            <div class="mb-3">
-              <label for="word2" class="form-label">Слово 2</label>
-              <input type="text" class="form-control" id="word2" name="word2" required>
-            </div>
+          <div class="mb-3">
+            <label for="word2" class="form-label">Слово 2</label>
+            <input type="text" class="form-control" id="word2" name="word2" required>
           </div>
-          <div class="modal-footer">
-            <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Отмена</button>
-            <button type="submit" class="btn btn-success">Добавить</button>
-          </div>
-        </form>
-      </div>
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Отмена</button>
+          <button type="submit" class="btn btn-success" id="wordPairSubmitBtn">Добавить</button>
+        </div>
+      </form>
     </div>
-  </div>>
+  </div>
+</div>
+<script src="{{ url_for('word_pairs.static', filename='js/fill_word_pair_modal.js') }}"></script>

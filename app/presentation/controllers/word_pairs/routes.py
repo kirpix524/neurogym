@@ -1,8 +1,9 @@
 from flask import render_template, g, redirect, url_for, flash, Response, request
 
-from app.application.dtos.word_pair import CreateWordPairDto
+from app.application.dtos.word_pair import CreateWordPairDto, UpdateWordPairDto
 from app.application.use_cases.create_word_pair import CreateWordPairUseCase
 from app.application.use_cases.delete_word_pair import DeleteWordPairUseCase
+from app.application.use_cases.update_pair import UpdateWordPairUseCase
 from app.application.use_cases.word_pairs import WordPairDataService
 from app.common_utils import get_folder_path
 from . import bp
@@ -10,7 +11,7 @@ from app.infrastructure.db.models.word_pairs import WordPairSetModel
 
 create_pair_uc = CreateWordPairUseCase()
 delete_pair_uc = DeleteWordPairUseCase()
-
+update_pair_uc = UpdateWordPairUseCase()
 
 @bp.route('/<int:set_id>', methods=['GET'])
 def view_word_pair_set(set_id: int) -> str | Response:
@@ -74,4 +75,27 @@ def delete_pair(set_id: int, pair_id: int) -> str | Response:
         flash('Пара слов удалена.', 'success')
     except ValueError as err:
         flash(str(err), 'danger')
+    return redirect(url_for('word_pairs.view_word_pair_set', set_id=set_id))
+
+@bp.route('/<int:set_id>/update_pair/<int:pair_id>', methods=['POST'])
+def update_pair(set_id: int, pair_id: int) -> str | Response:
+    key = request.form.get('word1', '').strip()
+    value = request.form.get('word2', '').strip()
+
+    if not key or not value:
+        flash('Оба слова должны быть заполнены.', 'danger')
+        return redirect(url_for('word_pairs.view_word_pair_set', set_id=set_id))
+
+    dto = UpdateWordPairDto(
+        id=pair_id,
+        key=key,
+        value=value,
+        set_id=set_id
+    )
+    try:
+        update_pair_uc.execute(dto)
+        flash('Пара слов обновлена.', 'success')
+    except ValueError as e:
+        flash(str(e), 'danger')
+
     return redirect(url_for('word_pairs.view_word_pair_set', set_id=set_id))
