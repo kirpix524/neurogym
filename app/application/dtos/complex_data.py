@@ -62,3 +62,14 @@ class UpdateComplexElementDto:
         self.comment: Optional[str] = comment
         self.data_id: int = data_id
         self.owner_id: int = owner_id
+
+class DeleteComplexElementDto:
+    def __init__(
+        self,
+        id: int,
+        data_id: int,
+        owner_id: int
+    ) -> None:
+        self.id: int = id
+        self.data_id: int = data_id
+        self.owner_id: int = owner_id

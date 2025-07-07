@@ -1,7 +1,8 @@
 from flask import render_template, request, redirect, url_for, flash, g, Response
 
-from app.application.dtos.complex_data import CreateComplexElementDto, UpdateComplexElementDto
+from app.application.dtos.complex_data import CreateComplexElementDto, UpdateComplexElementDto, DeleteComplexElementDto
 from app.application.use_cases.complex_data.create_complex_element import CreateComplexElementUseCase
+from app.application.use_cases.complex_data.delete_complex_element import DeleteComplexElementUseCase
 from app.application.use_cases.complex_data.update_complex_element import UpdateComplexElementUseCase
 from . import bp
 from app.common_utils import get_folder_path
@@ -9,6 +10,7 @@ from app.application.use_cases.complex_data.complex_data_data_service import Com
 
 create_element_uc = CreateComplexElementUseCase()
 update_element_uc = UpdateComplexElementUseCase()
+delete_element_uc = DeleteComplexElementUseCase()
 
 @bp.route('/<int:data_id>', methods=['GET'])
 def view_complex_data(data_id: int) -> str | Response:
@@ -89,11 +91,21 @@ def update_element(data_id: int, element_id: int) -> str | Response:
         flash(str(e), 'danger')
     return redirect(url_for('complex_data.view_complex_data', data_id=data_id))
 
-@bp.route('/<int:data_id>/update_element/<int:element_id>', methods=['POST'])
+@bp.route('/<int:data_id>/delete_element/<int:element_id>', methods=['POST'])
 def delete_element(data_id: int, element_id: int) -> str | Response:
     if g.current_user is None:
         flash('Пожалуйста, войдите в систему.', 'error')
         return redirect(url_for('login.show_login_form'))
 
-    flash('Удаление пока не работает', 'danger')
+    dto = DeleteComplexElementDto(
+        id=element_id,
+        data_id=data_id,
+        owner_id=g.current_user.id
+    )
+    try:
+        delete_element_uc.execute(dto)
+        flash('Элемент цепочки удалён.', 'success')
+    except ValueError as err:
+        flash(str(err), 'danger')
+
     return redirect(url_for('complex_data.view_complex_data', data_id=data_id))
