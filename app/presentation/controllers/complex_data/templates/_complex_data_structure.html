@@ -1,12 +1,12 @@
-<div class="d-flex flex-wrap align-items-center mb-4">
+<div class="d-flex flex-column align-items-start mb-4">
   {% for element in complex_data.elements %}
-    <div class="card me-2 mb-2">
+    <div class="card mb-2">
       <div class="card-body py-2 px-3">
         {{ element.name }}
       </div>
     </div>
     {% if not loop.last %}
-      <i class="bi bi-arrow-right fs-4 text-secondary me-2 mb-2"></i>
+      <i class="bi bi-arrow-down fs-4 text-secondary mb-2"></i>
     {% endif %}
   {% endfor %}
   {% include '_add_element_button.html' %}
