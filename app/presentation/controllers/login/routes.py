@@ -23,4 +23,4 @@ def login() -> Response | str:
 
     session['user_id'] = user.id
     flash('Вы успешно вошли!', 'success')
-    return redirect(url_for('account_settings.account_settings'))
+    return redirect(url_for('data.user_data'))
