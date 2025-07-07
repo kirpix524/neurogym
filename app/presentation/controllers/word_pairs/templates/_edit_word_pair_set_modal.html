@@ -1,0 +1,43 @@
+<div class="modal fade" id="editWordPairSetModal" tabindex="-1"
+     aria-labelledby="editWordPairSetModalLabel" aria-hidden="true"
+     data-update-url="{{ url_for('word_pairs.update_word_pair_set', set_id=word_set.id) }}">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <form id="wordPairSetForm" method="post" action="">
+        <div class="modal-header">
+          <h5 class="modal-title" id="editWordPairSetModalLabel">Редактировать набор пар слов</h5>
+          <button type="button" class="btn-close"
+                  data-bs-dismiss="modal" aria-label="Закрыть"></button>
+        </div>
+        <div class="modal-body">
+          <input type="hidden" name="set_id" id="setIdInput" value="">
+          <div class="mb-3">
+            <label for="setName" class="form-label">Название</label>
+            <input type="text" class="form-control"
+                   id="setName"
+                   name="set_name"
+                   required
+                   value="">
+          </div>
+          <div class="mb-3">
+            <label for="setComment" class="form-label">Комментарий</label>
+            <textarea class="form-control"
+                      id="setComment"
+                      name="set_comment"
+                      rows="3"></textarea>
+          </div>
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-secondary"
+                  data-bs-dismiss="modal">Отмена</button>
+          <button type="submit" class="btn btn-primary" id="setSubmitBtn">
+            Сохранить
+          </button>
+        </div>
+      </form>
+    </div>
+  </div>
+</div>
+
+<!-- Подключите рядом с Bootstrap.js -->
+<script src="{{ url_for('word_pairs.static', filename='js/fill_edit_word_pair_set_form.js') }}"></script>

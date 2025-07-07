@@ -3,8 +3,10 @@ from flask import render_template, g, redirect, url_for, flash, Response, reques
 from app.application.dtos.word_pair import CreateWordPairDto, UpdateWordPairDto
 from app.application.use_cases.create_word_pair import CreateWordPairUseCase
 from app.application.use_cases.delete_word_pair import DeleteWordPairUseCase
+from app.application.use_cases.update_word_pair_set import UpdateWordPairSetUseCase
 from app.application.use_cases.update_pair import UpdateWordPairUseCase
 from app.application.use_cases.word_pairs import WordPairDataService
+from app.application.dtos.word_pair_set import UpdateWordPairSetDto
 from app.common_utils import get_folder_path
 from . import bp
 from app.infrastructure.db.models.word_pairs import WordPairSetModel
@@ -12,6 +14,7 @@ from app.infrastructure.db.models.word_pairs import WordPairSetModel
 create_pair_uc = CreateWordPairUseCase()
 delete_pair_uc = DeleteWordPairUseCase()
 update_pair_uc = UpdateWordPairUseCase()
+update_pair_set_uc = UpdateWordPairSetUseCase()
 
 @bp.route('/<int:set_id>', methods=['GET'])
 def view_word_pair_set(set_id: int) -> str | Response:
@@ -97,5 +100,28 @@ def update_pair(set_id: int, pair_id: int) -> str | Response:
         flash('Пара слов обновлена.', 'success')
     except ValueError as e:
         flash(str(e), 'danger')
+
+    return redirect(url_for('word_pairs.view_word_pair_set', set_id=set_id))
+
+@bp.route('/<int:set_id>/update_set', methods=['POST'])
+def update_word_pair_set(set_id: int) -> str | Response:
+    name = request.form.get('set_name', '').strip()
+    comment = request.form.get('set_comment', '').strip() or None
+
+    if not name:
+        flash('Название набора не может быть пустым.', 'danger')
+        return redirect(url_for('word_pairs.view_word_pair_set', set_id=set_id))
+
+    dto = UpdateWordPairSetDto(
+        id=set_id,
+        name=name,
+        comment=comment,
+        owner_id=g.current_user.id
+    )
+    try:
+        update_pair_set_uc.execute(dto)
+        flash('Набор пар слов обновлён.', 'success')
+    except ValueError as err:
+        flash(str(err), 'danger')
 
     return redirect(url_for('word_pairs.view_word_pair_set', set_id=set_id))
