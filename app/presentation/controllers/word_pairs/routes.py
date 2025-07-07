@@ -1,15 +1,14 @@
 from flask import render_template, g, redirect, url_for, flash, Response, request
 
 from app.application.dtos.word_pair import CreateWordPairDto, UpdateWordPairDto
-from app.application.use_cases.create_word_pair import CreateWordPairUseCase
-from app.application.use_cases.delete_word_pair import DeleteWordPairUseCase
-from app.application.use_cases.update_word_pair_set import UpdateWordPairSetUseCase
-from app.application.use_cases.update_pair import UpdateWordPairUseCase
-from app.application.use_cases.word_pairs import WordPairDataService
+from app.application.use_cases.word_pairs.create_word_pair import CreateWordPairUseCase
+from app.application.use_cases.word_pairs.delete_word_pair import DeleteWordPairUseCase
+from app.application.use_cases.word_pairs.update_word_pair_set import UpdateWordPairSetUseCase
+from app.application.use_cases.word_pairs.update_word_pair import UpdateWordPairUseCase
+from app.application.use_cases.word_pairs.word_pair_data_service import WordPairDataService
 from app.application.dtos.word_pair_set import UpdateWordPairSetDto
 from app.common_utils import get_folder_path
 from . import bp
-from app.infrastructure.db.models.word_pairs import WordPairSetModel
 
 create_pair_uc = CreateWordPairUseCase()
 delete_pair_uc = DeleteWordPairUseCase()

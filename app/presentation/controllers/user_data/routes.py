@@ -4,13 +4,13 @@ from werkzeug import Response
 from app.application.dtos.complex_data import CreateComplexDataDto
 from app.application.dtos.folder import CreateFolderDto, UpdateFolderDto
 from app.application.dtos.word_pair_set import CreateWordPairSetDto
-from app.application.use_cases.create_complex_data import CreateComplexDataUseCase
-from app.application.use_cases.create_folder import CreateFolderUseCase
-from app.application.use_cases.create_word_pair_set import CreateWordPairSetUseCase
-from app.application.use_cases.delete_complex_data import DeleteComplexDataUseCase
-from app.application.use_cases.delete_folder import DeleteFolderUseCase
-from app.application.use_cases.delete_pair_set import DeleteWordPairSetUseCase
-from app.application.use_cases.update_folder import UpdateFolderUseCase
+from app.application.use_cases.complex_data.create_complex_data import CreateComplexDataUseCase
+from app.application.use_cases.folders.create_folder import CreateFolderUseCase
+from app.application.use_cases.word_pairs.create_word_pair_set import CreateWordPairSetUseCase
+from app.application.use_cases.complex_data.delete_complex_data import DeleteComplexDataUseCase
+from app.application.use_cases.folders.delete_folder import DeleteFolderUseCase
+from app.application.use_cases.word_pairs.delete_word_pair_set import DeleteWordPairSetUseCase
+from app.application.use_cases.folders.update_folder import UpdateFolderUseCase
 from app.application.use_cases.user_data import DataService
 from . import bp
 
