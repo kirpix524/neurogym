@@ -45,3 +45,20 @@ class CreateComplexElementDto:
         self.comment: Optional[str] = comment
         self.data_id: int = data_id
         self.owner_id: int = owner_id
+
+class UpdateComplexElementDto:
+    def __init__(
+        self,
+        id: int,
+        name: str,
+        content: str,
+        comment: Optional[str],
+        data_id: int,
+        owner_id: int
+    ) -> None:
+        self.id: int = id
+        self.name: str = name
+        self.content: str = content
+        self.comment: Optional[str] = comment
+        self.data_id: int = data_id
+        self.owner_id: int = owner_id

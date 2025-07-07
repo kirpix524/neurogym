@@ -1,12 +1,14 @@
 from flask import render_template, request, redirect, url_for, flash, g, Response
 
-from app.application.dtos.complex_data import CreateComplexElementDto
+from app.application.dtos.complex_data import CreateComplexElementDto, UpdateComplexElementDto
 from app.application.use_cases.complex_data.create_complex_element import CreateComplexElementUseCase
+from app.application.use_cases.complex_data.update_complex_element import UpdateComplexElementUseCase
 from . import bp
 from app.common_utils import get_folder_path
 from app.application.use_cases.complex_data.complex_data_data_service import ComplexDataService
 
 create_element_uc = CreateComplexElementUseCase()
+update_element_uc = UpdateComplexElementUseCase()
 
 @bp.route('/<int:data_id>', methods=['GET'])
 def view_complex_data(data_id: int) -> str | Response:
@@ -59,4 +61,39 @@ def create_element(data_id: int) -> str | Response:
     except ValueError as e:
         flash(str(e), 'danger')
 
+    return redirect(url_for('complex_data.view_complex_data', data_id=data_id))
+
+@bp.route('/<int:data_id>/update_element/<int:element_id>', methods=['POST'])
+def update_element(data_id: int, element_id: int) -> str | Response:
+    if g.current_user is None:
+        flash('Пожалуйста, войдите в систему.', 'error')
+        return redirect(url_for('login.show_login_form'))
+
+    name = request.form.get('element_name', '').strip()
+    if not name:
+        flash('Название элемента не может быть пустым.', 'danger')
+        return redirect(url_for('complex_data.view_complex_data', data_id=data_id))
+
+    dto = UpdateComplexElementDto(
+        id=element_id,
+        name=name,
+        content='',
+        comment='',
+        data_id=data_id,
+        owner_id=g.current_user.id
+    )
+    try:
+        update_element_uc.execute(dto)
+        flash('Элемент цепочки обновлён.', 'success')
+    except ValueError as e:
+        flash(str(e), 'danger')
+    return redirect(url_for('complex_data.view_complex_data', data_id=data_id))
+
+@bp.route('/<int:data_id>/update_element/<int:element_id>', methods=['POST'])
+def delete_element(data_id: int, element_id: int) -> str | Response:
+    if g.current_user is None:
+        flash('Пожалуйста, войдите в систему.', 'error')
+        return redirect(url_for('login.show_login_form'))
+
+    flash('Удаление пока не работает', 'danger')
     return redirect(url_for('complex_data.view_complex_data', data_id=data_id))

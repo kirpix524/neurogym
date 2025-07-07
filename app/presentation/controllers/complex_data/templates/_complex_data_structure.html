@@ -1,14 +1,36 @@
 <div class="d-flex flex-column align-items-start mb-4">
   {% for element in complex_data.elements %}
-    <div class="card mb-2">
-      <div class="card-body py-2 px-3">
-        {{ element.name }}
+    <div class="d-flex align-items-center mb-2">
+      <div class="card flex-grow-1">
+        <div class="card-body py-2 px-3">
+          {{ element.name }}
+        </div>
       </div>
+      <!-- Редактировать элемент -->
+      <button type="button"
+              class="btn btn-sm btn-outline-secondary ms-2"
+              data-bs-toggle="modal"
+              data-bs-target="#complexElementModal"
+              data-element-id="{{ element.id }}"
+              data-element-name="{{ element.name }}"
+              aria-label="Редактировать элемент">
+        <i class="bi bi-pencil"></i>
+      </button>
+      <!-- Удалить элемент -->
+      <form action="{{ url_for('complex_data.delete_element', data_id=complex_data.id, element_id=element.id) }}"
+            method="post"
+            class="d-inline ms-2"
+            onsubmit="return confirm('Удалить этот элемент?');">
+        <button type="submit" class="btn btn-sm btn-outline-danger">
+          <i class="bi bi-trash"></i>
+        </button>
+      </form>
     </div>
     {% if not loop.last %}
       <i class="bi bi-arrow-down fs-4 text-secondary mb-2"></i>
     {% endif %}
   {% endfor %}
+
   {% include '_add_element_button.html' %}
   {% include '_complex_element_modal.html' %}
 </div>

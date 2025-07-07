@@ -1,23 +1,26 @@
-<div class="modal fade" id="complexElementModal" tabindex="-1" aria-labelledby="complexElementModalLabel" aria-hidden="true">
+<div class="modal fade" id="complexElementModal" tabindex="-1" aria-labelledby="complexElementModalLabel" aria-hidden="true"
+     data-create-url="{{ url_for('complex_data.create_element', data_id=complex_data.id) }}"
+     data-update-url="{{ url_for('complex_data.update_element', data_id=complex_data.id, element_id=0) }}">
   <div class="modal-dialog">
     <div class="modal-content">
-      <form action="{{ url_for('complex_data.create_element', data_id=complex_data.id) }}" method="post">
+      <form id="complexElementForm" method="post" action="">
         <div class="modal-header">
           <h5 class="modal-title" id="complexElementModalLabel">Новый элемент цепочки</h5>
           <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Закрыть"></button>
         </div>
         <div class="modal-body">
-          <input type="hidden" name="data_id" value="{{ complex_data.id }}">
+          <input type="hidden" name="element_id" id="elementIdInput" value="">
           <div class="mb-3">
-            <label for="elementName" class="form-label">Элемент</label>
+            <label for="elementName" class="form-label">Название элемента</label>
             <input type="text" class="form-control" id="elementName" name="element_name" required>
           </div>
         </div>
         <div class="modal-footer">
           <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Отмена</button>
-          <button type="submit" class="btn btn-success">Добавить</button>
+          <button type="submit" class="btn btn-success" id="complexElementSubmitBtn">Добавить</button>
         </div>
       </form>
     </div>
   </div>
 </div>
+<script src="{{ url_for('complex_data.static', filename='js/fill_complex_element_modal.js') }}"></script>
