@@ -1,27 +1,27 @@
-from flask import render_template, g, redirect, url_for, flash
+from flask import render_template, g, redirect, url_for, flash, Response
 from . import bp
-from app.infrastructure.db.models.complex_data import ComplexDataModel
 from app.common_utils import get_folder_path
+from app.application.use_cases.complex_data.complex_data_data_service import ComplexDataService
 
 @bp.route('/<int:data_id>', methods=['GET'])
-def view_complex_data(data_id: int):
-    # 1. Только для залогиненных
+def view_complex_data(data_id: int) -> str | Response:
+    # Только для авторизованных
     if g.current_user is None:
         flash('Пожалуйста, войдите в систему.', 'error')
         return redirect(url_for('login.show_login_form'))
 
-    # 2. Ищем комплексные данные у текущего пользователя
-    complex_data = (
-        ComplexDataModel.query
-        .filter_by(id=data_id, owner_id=g.current_user.id)
-        .first()
-    )
-    if complex_data is None:
-        flash('Комплексные данные не найдены или доступ запрещён.', 'danger')
+    # Загружаем комплексные данные и их элементы
+    try:
+        complex_data = ComplexDataService().get_complex_data(
+            owner_id=g.current_user.id,
+            data_id=data_id
+        )
+    except ValueError as err:
+        flash(str(err), 'danger')
         return redirect(url_for('data.user_data'))
 
-    # 3. Собираем путь (breadcrumb) до папки
-    folders_path = get_folder_path(complex_data.folder)
+    # Хлебные крошки по папке
+    folders_path = get_folder_path(complex_data.folder_id)
 
     return render_template(
         'complex_data.html',
