@@ -73,3 +73,22 @@ class DeleteComplexElementDto:
         self.id: int = id
         self.data_id: int = data_id
         self.owner_id: int = owner_id
+
+class CreateAttributeForAllDto:
+    def __init__(self, data_id: int, name: str, owner_id: int) -> None:
+        self.data_id: int = data_id
+        self.name: str = name
+        self.owner_id: int = owner_id
+
+class UpdateElementAttributeDto:
+    def __init__(
+        self,
+        id: int,
+        content: str,
+        data_id: int,
+        owner_id: int
+    ) -> None:
+        self.id: int = id
+        self.content: str = content
+        self.data_id: int = data_id
+        self.owner_id: int = owner_id

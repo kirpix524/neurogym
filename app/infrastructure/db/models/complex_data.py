@@ -14,7 +14,7 @@ class ComplexAttributeModel(BaseData):
     __tablename__ = 'complex_attributes'
 
     name = Column('name', String, nullable=False)
-    content = Column('content', String, nullable=False)
+    content = Column('content', String, nullable=True)
     parent_element_id = Column(Integer, ForeignKey('complex_elements.id'))
 
     parent_element = relationship(

@@ -1,8 +1,11 @@
 from flask import render_template, request, redirect, url_for, flash, g, Response
 
-from app.application.dtos.complex_data import CreateComplexElementDto, UpdateComplexElementDto, DeleteComplexElementDto
+from app.application.dtos.complex_data import CreateComplexElementDto, UpdateComplexElementDto, DeleteComplexElementDto, \
+    CreateAttributeForAllDto, UpdateElementAttributeDto
+from app.application.use_cases.complex_data.create_complex_attribute_for_all import CreateAttributeForAllUseCase
 from app.application.use_cases.complex_data.create_complex_element import CreateComplexElementUseCase
 from app.application.use_cases.complex_data.delete_complex_element import DeleteComplexElementUseCase
+from app.application.use_cases.complex_data.update_complex_attrubute import UpdateElementAttributeUseCase
 from app.application.use_cases.complex_data.update_complex_element import UpdateComplexElementUseCase
 from . import bp
 from app.common_utils import get_folder_path
@@ -11,6 +14,8 @@ from app.application.use_cases.complex_data.complex_data_data_service import Com
 create_element_uc = CreateComplexElementUseCase()
 update_element_uc = UpdateComplexElementUseCase()
 delete_element_uc = DeleteComplexElementUseCase()
+create_attr_all_uc = CreateAttributeForAllUseCase()
+update_attr_uc = UpdateElementAttributeUseCase()
 
 @bp.route('/<int:data_id>', methods=['GET'])
 def view_complex_data(data_id: int) -> str | Response:
@@ -108,4 +113,47 @@ def delete_element(data_id: int, element_id: int) -> str | Response:
     except ValueError as err:
         flash(str(err), 'danger')
 
+    return redirect(url_for('complex_data.view_complex_data', data_id=data_id))
+
+@bp.route('/<int:data_id>/create_attribute_all', methods=['POST'])
+def create_attribute_all(data_id: int):
+    if g.current_user is None:
+        flash('Войдите в систему', 'error')
+        return redirect(url_for('login.show_login_form'))
+
+    name = request.form.get('attribute_name', '').strip()
+    if not name:
+        flash('Имя атрибута не может быть пустым', 'danger')
+        return redirect(url_for('complex_data.view_complex_data', data_id=data_id))
+
+    dto = CreateAttributeForAllDto(
+        data_id=data_id,
+        name=name,
+        owner_id=g.current_user.id
+    )
+    try:
+        create_attr_all_uc.execute(dto)
+        flash('Атрибут создан для всех элементов', 'success')
+    except ValueError as e:
+        flash(str(e), 'danger')
+    return redirect(url_for('complex_data.view_complex_data', data_id=data_id))
+
+@bp.route('/<int:data_id>/update_element_attr/<int:attr_id>', methods=['POST'])
+def update_element_attr(data_id: int, attr_id: int):
+    if g.current_user is None:
+        flash('Войдите в систему', 'error')
+        return redirect(url_for('login.show_login_form'))
+
+    content = request.form.get('content', '').strip()
+    dto = UpdateElementAttributeDto(
+        id=attr_id,
+        data_id=data_id,
+        content=content,
+        owner_id=g.current_user.id
+    )
+    try:
+        update_attr_uc.execute(dto)
+        flash('Значение атрибута сохранено', 'success')
+    except ValueError as e:
+        flash(str(e), 'danger')
     return redirect(url_for('complex_data.view_complex_data', data_id=data_id))
