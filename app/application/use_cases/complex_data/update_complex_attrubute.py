@@ -25,7 +25,7 @@ class UpdateElementAttributeUseCase:
         # 2. Проверяем права доступа через связь к ComplexDataModel
         #    Предполагается, что ComplexElementAttributeModel.element → ComplexElementModel
         #    и ComplexElementModel.parent_data → ComplexDataModel
-        if attribute.element.parent_data.owner_id != dto.owner_id:
+        if attribute.parent_element.owner_id != dto.owner_id:
             raise ValueError("Нет прав на изменение этого атрибута.")
 
         # 3. Обновляем содержимое и сохраняем

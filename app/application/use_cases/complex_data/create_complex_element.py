@@ -34,6 +34,7 @@ class CreateComplexElementUseCase:
             content=dto.content,
             comment=dto.comment,
             parent_data_id=dto.data_id,
+            owner_id=dto.owner_id,
             position=next_position
         )
         self._session.add(element)

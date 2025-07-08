@@ -50,6 +50,7 @@
                 data-bs-toggle="modal"
                 data-bs-target="#editElementAttrModal"
                 data-attr-id="{{ attr.id }}"
+                data-attr-name="{{ attr.name }}"
                 data-attr-content="{{ attr.content or '' }}">
           <i class="bi bi-pencil"></i>
         </button>
@@ -63,4 +64,5 @@
   {% include '_add_element_button.html' %}
   {% include '_complex_element_modal.html' %}
   {% include '_create_attribute_all_modal.html' %}
+  {% include '_edit_element_attr_modal.html' %}
 </div>
