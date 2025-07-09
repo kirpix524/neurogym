@@ -1,7 +1,8 @@
-<div class="modal fade" id="createAttributeAllModal" tabindex="-1" aria-labelledby="createAttributeAllModalLabel" aria-hidden="true">
+<div class="modal fade" id="createAttributeAllModal" tabindex="-1" aria-labelledby="createAttributeAllModalLabel" aria-hidden="true"
+     data-create-url-template="{{ url_for('complex_data.create_attribute_all', data_id=0) }}">
   <div class="modal-dialog">
     <div class="modal-content">
-      <form action="{{ url_for('complex_data.create_attribute_all', data_id=complex_data.id) }}" method="post">
+      <form id="createAttributeAllForm" method="post" action="">
         <div class="modal-header">
           <h5 class="modal-title" id="createAttributeAllModalLabel">Добавить атрибут ко всем элементам</h5>
           <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Закрыть"></button>

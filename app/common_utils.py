@@ -20,6 +20,10 @@ def find_root_data(data_id: int) -> ComplexDataModel:
 
     # Всегда возвращаемся к корневой цепочке, найденной от data_id
     root = ComplexDataModel.query.get(data_id)
+    if not root:
+        root = ComplexElementModel.query.get(data_id)
+    if not root:
+        raise ValueError(f'ComplexDataModel or ComplexElementModel with id={data_id} not found')
     while root.parent_element is not None:
         root = root.parent_element.parent_data
 

@@ -158,7 +158,11 @@ def create_attribute_all(data_id: int):
     except ValueError as e:
         flash(str(e), 'danger')
 
-    root_data = find_root_data(data_id)
+    try:
+        root_data = find_root_data(data_id)
+    except ValueError as e:
+        flash(str(e), 'danger')
+        return redirect(url_for('complex_data.view_complex_data', data_id=data_id))
 
     scroll = request.args.get('scroll')  # если он есть — передаем в redirect, иначе просто редирект
     if scroll is not None:
@@ -184,7 +188,11 @@ def update_element_attr(data_id: int, attr_id: int):
     except ValueError as e:
         flash(str(e), 'danger')
 
-    root_data = find_root_data(data_id)
+    try:
+        root_data = find_root_data(data_id)
+    except ValueError as e:
+        flash(str(e), 'danger')
+        return redirect(url_for('complex_data.view_complex_data', data_id=data_id))
 
     scroll = request.args.get('scroll')  # если он есть — передаем в redirect, иначе просто редирект
     if scroll is not None:
@@ -216,7 +224,11 @@ def create_chain_all(data_id: int) -> str | Response:
     except ValueError as err:
         flash(str(err), 'danger')
 
-    root_data = find_root_data(data_id)
+    try:
+        root_data = find_root_data(data_id)
+    except ValueError as e:
+        flash(str(e), 'danger')
+        return redirect(url_for('complex_data.view_complex_data', data_id=data_id))
 
     scroll = request.args.get('scroll')  # если он есть — передаем в redirect, иначе просто редирект
     if scroll is not None:
@@ -248,7 +260,11 @@ def update_complex_data(data_id: int) -> str | Response:
     except ValueError as e:
         flash(str(e), 'danger')
 
-    root_data = find_root_data(data_id)
+    try:
+        root_data = find_root_data(data_id)
+    except ValueError as e:
+        flash(str(e), 'danger')
+        return redirect(url_for('complex_data.view_complex_data', data_id=data_id))
 
     scroll = request.args.get('scroll')  # если он есть — передаем в redirect, иначе просто редирект
     if scroll is not None:
