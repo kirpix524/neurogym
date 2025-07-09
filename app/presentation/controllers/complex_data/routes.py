@@ -8,8 +8,9 @@ from app.application.use_cases.complex_data.create_complex_element import Create
 from app.application.use_cases.complex_data.delete_complex_element import DeleteComplexElementUseCase
 from app.application.use_cases.complex_data.update_complex_attrubute import UpdateElementAttributeUseCase
 from app.application.use_cases.complex_data.update_complex_element import UpdateComplexElementUseCase
+from app.infrastructure.db.models.complex_data import ComplexDataModel, ComplexElementModel
 from . import bp
-from app.common_utils import get_folder_path
+from app.common_utils import get_folder_path, find_root_data
 from app.application.use_cases.complex_data.complex_data_data_service import ComplexDataService
 
 create_element_uc = CreateComplexElementUseCase()
@@ -65,12 +66,14 @@ def create_element(data_id: int) -> str | Response:
         owner_id=g.current_user.id
     )
     try:
-        create_element_uc.execute(dto)
+        new_elem: ComplexElementModel = create_element_uc.execute(dto)
         flash('Элемент цепочки добавлен.', 'success')
     except ValueError as e:
         flash(str(e), 'danger')
 
-    return redirect(url_for('complex_data.view_complex_data', data_id=data_id))
+    root_data = find_root_data(data_id)
+
+    return redirect(url_for('complex_data.view_complex_data', data_id=root_data.id))
 
 @bp.route('/<int:data_id>/update_element/<int:element_id>', methods=['POST'])
 def update_element(data_id: int, element_id: int) -> str | Response:
@@ -96,7 +99,10 @@ def update_element(data_id: int, element_id: int) -> str | Response:
         flash('Элемент цепочки обновлён.', 'success')
     except ValueError as e:
         flash(str(e), 'danger')
-    return redirect(url_for('complex_data.view_complex_data', data_id=data_id))
+
+    root_data = find_root_data(data_id)
+
+    return redirect(url_for('complex_data.view_complex_data', data_id=root_data.id))
 
 @bp.route('/<int:data_id>/delete_element/<int:element_id>', methods=['POST'])
 def delete_element(data_id: int, element_id: int) -> str | Response:
@@ -115,7 +121,9 @@ def delete_element(data_id: int, element_id: int) -> str | Response:
     except ValueError as err:
         flash(str(err), 'danger')
 
-    return redirect(url_for('complex_data.view_complex_data', data_id=data_id))
+    root_data = find_root_data(data_id)
+
+    return redirect(url_for('complex_data.view_complex_data', data_id=root_data.id))
 
 @bp.route('/<int:data_id>/create_attribute_all', methods=['POST'])
 def create_attribute_all(data_id: int):
@@ -138,7 +146,10 @@ def create_attribute_all(data_id: int):
         flash('Атрибут создан для всех элементов', 'success')
     except ValueError as e:
         flash(str(e), 'danger')
-    return redirect(url_for('complex_data.view_complex_data', data_id=data_id))
+
+    root_data = find_root_data(data_id)
+
+    return redirect(url_for('complex_data.view_complex_data', data_id=root_data.id))
 
 @bp.route('/<int:data_id>/update_element_attr/<int:attr_id>', methods=['POST'])
 def update_element_attr(data_id: int, attr_id: int):
@@ -158,7 +169,10 @@ def update_element_attr(data_id: int, attr_id: int):
         flash('Значение атрибута сохранено', 'success')
     except ValueError as e:
         flash(str(e), 'danger')
-    return redirect(url_for('complex_data.view_complex_data', data_id=data_id))
+
+    root_data = find_root_data(data_id)
+
+    return redirect(url_for('complex_data.view_complex_data', data_id=root_data.id))
 
 @bp.route('/<int:data_id>/create_chain_all', methods=['POST'])
 def create_chain_all(data_id: int) -> str | Response:
@@ -185,4 +199,6 @@ def create_chain_all(data_id: int) -> str | Response:
     except ValueError as err:
         flash(str(err), 'danger')
 
-    return redirect(url_for('complex_data.view_complex_data', data_id=data_id))
+    root_data = find_root_data(data_id)
+
+    return redirect(url_for('complex_data.view_complex_data', data_id=root_data.id))

@@ -1,9 +1,10 @@
-<!-- Кнопка добавления нового элемента цепочки -->
 <button type="button"
-      class="btn btn-success rounded-circle ms-3 mb-2"
-      style="width: 48px; height: 48px;"
-      data-bs-toggle="modal"
-      data-bs-target="#complexElementModal"
-      aria-label="Добавить элемент цепочки">
-<i class="bi bi-plus-lg" style="font-size: 1.5rem;"></i>
+        class="btn btn-success rounded-circle ms-3 mb-2"
+        style="width: 48px; height: 48px;"
+        data-bs-toggle="modal"
+        data-bs-target="#complexElementModal"
+        data-parent-data-id="{{ data.id }}"
+        data-create-url="{{ url_for('complex_data.create_element', data_id=data.id) }}"
+        aria-label="Добавить элемент цепочки">
+  <i class="bi bi-plus-lg" style="font-size: 1.5rem;"></i>
 </button>

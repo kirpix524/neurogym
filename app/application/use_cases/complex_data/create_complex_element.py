@@ -7,7 +7,7 @@ class CreateComplexElementUseCase:
     def __init__(self) -> None:
         self._session = db.session
 
-    def execute(self, dto: CreateComplexElementDto) -> None:
+    def execute(self, dto: CreateComplexElementDto) -> ComplexElementModel:
         # Валидация
         if not dto.name.strip():
             raise ValueError("Название элемента не может быть пустым")
@@ -39,3 +39,4 @@ class CreateComplexElementUseCase:
         )
         self._session.add(element)
         self._session.commit()
+        return element

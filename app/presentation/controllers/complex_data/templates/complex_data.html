@@ -32,27 +32,6 @@
           </ol>
         </nav>
 
-        <!-- Заголовок и кнопка редактирования -->
-        <div class="d-flex justify-content-between align-items-center mb-4">
-          <h3>{{ complex_data.name }}</h3>
-          <button type="button"
-                  class="btn btn-outline-primary"
-                  data-bs-toggle="modal"
-                  data-bs-target="#editComplexDataModal">
-            <i class="bi bi-pencil-square"></i> Редактировать
-          </button>
-        </div>
-
-        <!-- Комментарий -->
-        {% if complex_data.comment %}
-          <div class="card mb-4">
-            <div class="card-body">
-              <h5 class="card-title">Комментарий</h5>
-              <p class="card-text">{{ complex_data.comment }}</p>
-            </div>
-          </div>
-        {% endif %}
-
         <!-- Здесь рендерятся вложенные элементы complex_data.chain -->
         {% include '_complex_data_structure.html' %}
 

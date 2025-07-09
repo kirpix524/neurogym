@@ -1,0 +1,76 @@
+{% macro render_chain(data, level=0) %}
+  <div class="ms-{{ level * 4 }} mb-4">
+    {# Заголовок цепочки #}
+    <div class="d-flex justify-content-between align-items-center mb-2">
+      <h5 class="mb-0">{{ data.name }}</h5>
+      {# Кнопка редактирования самой цепочки #}
+      <button type="button"
+              class="btn btn-sm btn-outline-primary"
+              data-bs-toggle="modal"
+              data-bs-target="#editComplexDataModal"
+              data-data-id="{{ data.id }}"
+              data-data-name="{{ data.name }}"
+              data-data-comment="{{ data.comment or '' }}">
+        <i class="bi bi-pencil-square"></i>
+      </button>
+    </div>
+
+    {# Комментарий цепочки #}
+    {% if data.comment %}
+      <div class="card mb-3">
+        <div class="card-body">
+          <small class="text-muted">{{ data.comment }}</small>
+        </div>
+      </div>
+    {% endif %}
+
+    {# Элементы цепочки #}
+    <div class="d-flex flex-column">
+      {% for element in data.elements %}
+        <div class="d-flex align-items-center mb-2">
+          <div class="card flex-grow-1">
+            <div class="card-body py-2 px-3">
+              {{ element.name }}
+            </div>
+          </div>
+          {# Ваши кнопки ред/удаления атрибутов и элементов #}
+          <button type="button" class="btn btn-sm btn-outline-secondary ms-2"
+                  data-bs-toggle="modal" data-bs-target="#complexElementModal"
+                  data-element-id="{{ element.id }}"
+                  data-element-name="{{ element.name }}">
+            <i class="bi bi-pencil"></i>
+          </button>
+          <form action="{{ url_for('complex_data.delete_element', data_id=element.parent_data_id, element_id=element.id) }}"
+                method="post" class="d-inline ms-2"
+                onsubmit="return confirm('Удалить этот элемент?');">
+            <button type="submit" class="btn btn-sm btn-outline-danger"><i class="bi bi-trash"></i></button>
+          </form>
+        </div>
+
+        {# Атрибуты элемента #}
+        <div class="ms-4 mb-2">
+          {% for attr in element.attributes %}
+            <span class="badge bg-info text-dark">{{ attr.name }}: {{ attr.content or '-' }}</span>
+            <button class="btn btn-sm btn-link"
+                    data-bs-toggle="modal"
+                    data-bs-target="#editElementAttrModal"
+                    data-attr-id="{{ attr.id }}"
+                    data-attr-content="{{ attr.content or '' }}">
+              <i class="bi bi-pencil"></i>
+            </button>
+          {% endfor %}
+        </div>
+
+        {# Рекурсивно рендерим все дочерние цепочки этого элемента #}
+        {% for child_data in element.children_data %}
+          {{ render_chain(child_data, level + 1) }}
+        {% endfor %}
+
+        {% if not loop.last %}
+          <i class="bi bi-arrow-down fs-4 text-secondary mb-2 ms-{{ level * 4 }}"></i>
+        {% endif %}
+      {% endfor %}
+    </div>
+      {% include '_add_element_button.html' %}
+  </div>
+{% endmacro %}

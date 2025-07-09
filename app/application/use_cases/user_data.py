@@ -55,7 +55,7 @@ class DataService:
         # комплексные данные
         complex_items = (
             ComplexDataModel.query
-            .filter_by(owner_id=owner_id, folder_id=parent_folder_id)
+            .filter_by(owner_id=owner_id, folder_id=parent_folder_id, parent_element_id=None)
             .all()
         )
         for cd in complex_items:
