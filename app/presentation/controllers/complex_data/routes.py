@@ -66,13 +66,16 @@ def create_element(data_id: int) -> str | Response:
         owner_id=g.current_user.id
     )
     try:
-        new_elem: ComplexElementModel = create_element_uc.execute(dto)
+        create_element_uc.execute(dto)
         flash('Элемент цепочки добавлен.', 'success')
     except ValueError as e:
         flash(str(e), 'danger')
 
     root_data = find_root_data(data_id)
 
+    scroll = request.args.get('scroll') # если он есть — передаем в redirect, иначе просто редирект
+    if scroll is not None:
+        return redirect(url_for('complex_data.view_complex_data',data_id=root_data.id, scroll = scroll))
     return redirect(url_for('complex_data.view_complex_data', data_id=root_data.id))
 
 @bp.route('/<int:data_id>/update_element/<int:element_id>', methods=['POST'])
@@ -102,6 +105,9 @@ def update_element(data_id: int, element_id: int) -> str | Response:
 
     root_data = find_root_data(data_id)
 
+    scroll = request.args.get('scroll')  # если он есть — передаем в redirect, иначе просто редирект
+    if scroll is not None:
+        return redirect(url_for('complex_data.view_complex_data', data_id=root_data.id, scroll=scroll))
     return redirect(url_for('complex_data.view_complex_data', data_id=root_data.id))
 
 @bp.route('/<int:data_id>/delete_element/<int:element_id>', methods=['POST'])
@@ -123,6 +129,9 @@ def delete_element(data_id: int, element_id: int) -> str | Response:
 
     root_data = find_root_data(data_id)
 
+    scroll = request.args.get('scroll')  # если он есть — передаем в redirect, иначе просто редирект
+    if scroll is not None:
+        return redirect(url_for('complex_data.view_complex_data', data_id=root_data.id, scroll=scroll))
     return redirect(url_for('complex_data.view_complex_data', data_id=root_data.id))
 
 @bp.route('/<int:data_id>/create_attribute_all', methods=['POST'])
@@ -149,6 +158,9 @@ def create_attribute_all(data_id: int):
 
     root_data = find_root_data(data_id)
 
+    scroll = request.args.get('scroll')  # если он есть — передаем в redirect, иначе просто редирект
+    if scroll is not None:
+        return redirect(url_for('complex_data.view_complex_data', data_id=root_data.id, scroll=scroll))
     return redirect(url_for('complex_data.view_complex_data', data_id=root_data.id))
 
 @bp.route('/<int:data_id>/update_element_attr/<int:attr_id>', methods=['POST'])
@@ -172,6 +184,9 @@ def update_element_attr(data_id: int, attr_id: int):
 
     root_data = find_root_data(data_id)
 
+    scroll = request.args.get('scroll')  # если он есть — передаем в redirect, иначе просто редирект
+    if scroll is not None:
+        return redirect(url_for('complex_data.view_complex_data', data_id=root_data.id, scroll=scroll))
     return redirect(url_for('complex_data.view_complex_data', data_id=root_data.id))
 
 @bp.route('/<int:data_id>/create_chain_all', methods=['POST'])
@@ -201,4 +216,7 @@ def create_chain_all(data_id: int) -> str | Response:
 
     root_data = find_root_data(data_id)
 
+    scroll = request.args.get('scroll')  # если он есть — передаем в redirect, иначе просто редирект
+    if scroll is not None:
+        return redirect(url_for('complex_data.view_complex_data', data_id=root_data.id, scroll=scroll))
     return redirect(url_for('complex_data.view_complex_data', data_id=root_data.id))
