@@ -1,0 +1,48 @@
+<div class="modal fade" id="editComplexDataModal" tabindex="-1" aria-labelledby="editComplexDataModalLabel" aria-hidden="true"
+     data-update-url="{{ url_for('complex_data.update_complex_data', data_id=complex_data.id) }}">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <form id="editComplexDataForm" method="post" action="">
+        <div class="modal-header">
+          <h5 class="modal-title" id="editComplexDataModalLabel">Редактировать комплексные данные</h5>
+          <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Закрыть"></button>
+        </div>
+        <div class="modal-body">
+          <!-- Поля редактирования -->
+          <div class="mb-3">
+            <label for="complexDataName" class="form-label">Название</label>
+            <input type="text" class="form-control" id="complexDataName" name="data_name" required>
+          </div>
+          <div class="mb-3">
+            <label for="complexDataComment" class="form-label">Комментарий</label>
+            <textarea class="form-control" id="complexDataComment" name="data_comment" rows="3"></textarea>
+          </div>
+
+          <hr>
+
+          <!-- Массовое добавление атрибута ко всем элементам -->
+          <button type="button"
+                  class="btn btn-outline-success me-2"
+                  data-bs-toggle="modal"
+                  data-bs-target="#createAttributeAllModal">
+            <i class="bi bi-plus-lg"></i> Добавить атрибут
+          </button>
+
+          <!-- Массовая подчинённая цепочка -->
+          <button type="button"
+                  class="btn btn-outline-secondary"
+                  data-bs-toggle="modal"
+                  data-bs-target="#createChainAllModal">
+            <i class="bi bi-sitemap"></i> Добавить цепочку
+          </button>
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Отмена</button>
+          <button type="submit" class="btn btn-primary" id="editComplexDataSubmit">Сохранить</button>
+        </div>
+      </form>
+    </div>
+  </div>
+</div>
+
+<script src="{{ url_for('complex_data.static', filename='js/fill_edit_complex_data_modal.js') }}"></script>
