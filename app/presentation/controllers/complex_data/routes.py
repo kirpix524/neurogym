@@ -1,8 +1,9 @@
 from flask import render_template, request, redirect, url_for, flash, g, Response
 
 from app.application.dtos.complex_data import CreateComplexElementDto, UpdateComplexElementDto, DeleteComplexElementDto, \
-    CreateAttributeForAllDto, UpdateElementAttributeDto
+    CreateAttributeForAllDto, UpdateElementAttributeDto, CreateChainForAllDto
 from app.application.use_cases.complex_data.create_complex_attribute_for_all import CreateAttributeForAllUseCase
+from app.application.use_cases.complex_data.create_complex_data_for_all import CreateComplexDataForAllUseCase
 from app.application.use_cases.complex_data.create_complex_element import CreateComplexElementUseCase
 from app.application.use_cases.complex_data.delete_complex_element import DeleteComplexElementUseCase
 from app.application.use_cases.complex_data.update_complex_attrubute import UpdateElementAttributeUseCase
@@ -16,6 +17,7 @@ update_element_uc = UpdateComplexElementUseCase()
 delete_element_uc = DeleteComplexElementUseCase()
 create_attr_all_uc = CreateAttributeForAllUseCase()
 update_attr_uc = UpdateElementAttributeUseCase()
+create_complex_data_all_uc = CreateComplexDataForAllUseCase()
 
 @bp.route('/<int:data_id>', methods=['GET'])
 def view_complex_data(data_id: int) -> str | Response:
@@ -156,4 +158,31 @@ def update_element_attr(data_id: int, attr_id: int):
         flash('Значение атрибута сохранено', 'success')
     except ValueError as e:
         flash(str(e), 'danger')
+    return redirect(url_for('complex_data.view_complex_data', data_id=data_id))
+
+@bp.route('/<int:data_id>/create_chain_all', methods=['POST'])
+def create_chain_all(data_id: int) -> str | Response:
+    if g.current_user is None:
+        flash('Пожалуйста, войдите в систему.', 'error')
+        return redirect(url_for('login.show_login_form'))
+
+    name = request.form.get('chain_name', '').strip()
+    comment = request.form.get('chain_comment', '').strip() or None
+
+    if not name:
+        flash('Название цепочки не может быть пустым.', 'danger')
+        return redirect(url_for('complex_data.view_complex_data', data_id=data_id))
+
+    dto = CreateChainForAllDto(
+        data_id=data_id,
+        name=name,
+        comment=comment,
+        owner_id=g.current_user.id
+    )
+    try:
+        create_complex_data_all_uc.execute(dto)
+        flash('Подчинённые цепочки созданы для всех элементов.', 'success')
+    except ValueError as err:
+        flash(str(err), 'danger')
+
     return redirect(url_for('complex_data.view_complex_data', data_id=data_id))

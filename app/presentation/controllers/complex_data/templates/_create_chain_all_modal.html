@@ -1,0 +1,26 @@
+<div class="modal fade" id="createChainAllModal" tabindex="-1" aria-labelledby="createChainAllModalLabel" aria-hidden="true">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <form action="{{ url_for('complex_data.create_chain_all', data_id=complex_data.id) }}" method="post">
+        <div class="modal-header">
+          <h5 class="modal-title" id="createChainAllModalLabel">Добавить подчинённую цепочку ко всем элементам</h5>
+          <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Закрыть"></button>
+        </div>
+        <div class="modal-body">
+          <div class="mb-3">
+            <label for="chainName" class="form-label">Название цепочки</label>
+            <input type="text" class="form-control" id="chainName" name="chain_name" required>
+          </div>
+          <div class="mb-3">
+            <label for="chainComment" class="form-label">Комментарий</label>
+            <textarea class="form-control" id="chainComment" name="chain_comment" rows="2"></textarea>
+          </div>
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Отмена</button>
+          <button type="submit" class="btn btn-success">Создать цепочки</button>
+        </div>
+      </form>
+    </div>
+  </div>
+</div>

@@ -37,7 +37,6 @@ class ComplexDataModel(BaseData):
     created_at = Column('created_at', DateTime, default=datetime.now, nullable=False)
     owner_id = Column('owner_id', Integer, ForeignKey('users.id'), nullable=True)
     parent_element_id = Column(Integer, ForeignKey('complex_elements.id'), nullable=True)
-    parent_id = Column(Integer, ForeignKey('complex_data.id'), nullable=True)
     folder_id = Column(Integer, ForeignKey('folders.id'), nullable=True)
 
     elements = relationship(
@@ -51,19 +50,6 @@ class ComplexDataModel(BaseData):
         "ComplexElementModel",
         back_populates="children_data",
         foreign_keys=[parent_element_id]
-    )
-    parent = relationship(
-        "ComplexDataModel",
-        remote_side="ComplexDataModel.id",
-        back_populates="children",
-        foreign_keys=[parent_id]
-    )
-    children = relationship(
-        "ComplexDataModel",
-        back_populates="parent",
-        cascade="all, delete-orphan",
-        lazy='select',
-        foreign_keys=[parent_id]
     )
     folder = relationship(
         "FolderModel",

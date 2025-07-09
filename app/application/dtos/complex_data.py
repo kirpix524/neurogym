@@ -92,3 +92,16 @@ class UpdateElementAttributeDto:
         self.content: str = content
         self.data_id: int = data_id
         self.owner_id: int = owner_id
+
+class CreateChainForAllDto:
+    def __init__(
+        self,
+        data_id: int,
+        name: str,
+        comment: Optional[str],
+        owner_id: int
+    ) -> None:
+        self.data_id: int = data_id
+        self.name: str = name
+        self.comment: Optional[str] = comment
+        self.owner_id: int = owner_id
