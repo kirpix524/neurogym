@@ -1,9 +1,7 @@
 {% macro render_chain(data, level=0) %}
   <div class="ms-{{ level * 4 }} mb-4">
-    {# Заголовок цепочки #}
     <div class="d-flex justify-content-between align-items-center mb-2">
       <h5 class="mb-0">{{ data.name }}</h5>
-      {# Кнопка редактирования самой цепочки #}
       <button type="button"
               class="btn btn-sm btn-outline-primary"
               data-bs-toggle="modal"
@@ -15,7 +13,6 @@
       </button>
     </div>
 
-    {# Комментарий цепочки #}
     {% if data.comment %}
       <div class="card mb-3">
         <div class="card-body">
@@ -24,7 +21,6 @@
       </div>
     {% endif %}
 
-    {# Элементы цепочки #}
     <div class="d-flex flex-column">
       {% for element in data.elements %}
         <div class="d-flex align-items-center mb-2">
@@ -33,9 +29,23 @@
               {{ element.name }}
             </div>
           </div>
-          {# Ваши кнопки ред/удаления атрибутов и элементов #}
+
+          <!-- Переключатель видимости дочерних цепочек -->
+          {% if element.children_data %}
+            <button class="btn btn-sm btn-outline-secondary ms-2 children-toggle"
+                    type="button"
+                    data-element-id="{{ element.id }}"
+                    data-bs-toggle="collapse"
+                    data-bs-target="#children-{{ element.id }}"
+                    aria-expanded="false"
+                    aria-controls="children-{{ element.id }}">
+              <i class="bi bi-plus-lg"></i>
+            </button>
+          {% endif %}
+
           <button type="button" class="btn btn-sm btn-outline-secondary ms-2"
-                  data-bs-toggle="modal" data-bs-target="#complexElementModal"
+                  data-bs-toggle="modal"
+                  data-bs-target="#complexElementModal"
                   data-element-id="{{ element.id }}"
                   data-element-name="{{ element.name }}">
             <i class="bi bi-pencil"></i>
@@ -47,7 +57,6 @@
           </form>
         </div>
 
-        {# Атрибуты элемента #}
         <div class="ms-4 mb-2">
           {% for attr in element.attributes %}
             <span class="badge bg-info text-dark">{{ attr.name }}: {{ attr.content or '-' }}</span>
@@ -61,16 +70,21 @@
           {% endfor %}
         </div>
 
-        {# Рекурсивно рендерим все дочерние цепочки этого элемента #}
-        {% for child_data in element.children_data %}
-          {{ render_chain(child_data, level + 1) }}
-        {% endfor %}
+        <!-- Дочерние цепочки, по умолчанию скрыты -->
+        {% if element.children_data %}
+          <div class="collapse ms-4" id="children-{{ element.id }}">
+            {% for child_data in element.children_data %}
+              {{ render_chain(child_data, level + 1) }}
+            {% endfor %}
+          </div>
+        {% endif %}
 
         {% if not loop.last %}
           <i class="bi bi-arrow-down fs-4 text-secondary mb-2 ms-{{ level * 4 }}"></i>
         {% endif %}
       {% endfor %}
     </div>
-      {% include '_add_element_button.html' %}
+    {% include '_add_element_button.html' %}
   </div>
 {% endmacro %}
+
