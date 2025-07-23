@@ -28,9 +28,12 @@ document.getElementById('editComplexDataModal')
     if (chainBtn) {
       chainBtn.setAttribute('data-data-id', dataId);
     }
+    // Подставляем реальный ID вместо 0
+    const newUpdateUrl = updateUrl.replace(/\/0\//, `/${dataId}/`);
+    console.log('[fill-edit-modal] newUpdateUrl =', newUpdateUrl);
 
     // Устанавливаем action, значения полей и текст кнопки
-    form.action        = updateUrl;
+    form.action        = newUpdateUrl;
     nameInput.value    = name;
     commentInput.value = comment;
     submitBtn.textContent = 'Сохранить';

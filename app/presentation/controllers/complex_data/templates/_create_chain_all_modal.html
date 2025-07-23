@@ -1,7 +1,7 @@
 <div class="modal fade" id="createChainAllModal" tabindex="-1" aria-labelledby="createChainAllModalLabel" aria-hidden="true">
   <div class="modal-dialog">
     <div class="modal-content">
-      <form action="{{ url_for('complex_data.create_chain_all', data_id=complex_data.id) }}" method="post">
+      <form action="{{ url_for('complex_data.create_chain_all', data_id=0) }}" method="post">
         <div class="modal-header">
           <h5 class="modal-title" id="createChainAllModalLabel">Добавить подчинённую цепочку ко всем элементам</h5>
           <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Закрыть"></button>
@@ -24,3 +24,4 @@
     </div>
   </div>
 </div>
+<script src="{{ url_for('complex_data.static', filename='js/fill_create_chain_all_modal.js') }}"></script>

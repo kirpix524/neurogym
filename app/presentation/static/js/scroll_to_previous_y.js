@@ -1,18 +1,14 @@
 (function(){
   const PARAM = 'scroll';
 
-  console.log('[scroll] initializing scroll persistence script');
-
   // Перехватываем сабмит форм
   document.addEventListener('submit', function(e) {
     const form = e.target;
     if (form.tagName !== 'FORM') return;
     const y = Math.floor(window.scrollY);
-    console.log('[scroll] form submit detected, scrollY =', y, 'original action =', form.action);
     try {
       const u = new URL(form.action, window.location.origin);
       u.searchParams.set(PARAM, y);
-      console.log('[scroll] rewriting action to', u.toString());
       form.action = u.toString();
     } catch (err) {
       console.error('[scroll] error rewriting form action:', err);
