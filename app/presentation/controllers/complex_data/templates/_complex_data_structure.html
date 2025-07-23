@@ -1,21 +1,5 @@
 {% import '_recursive_complex_data.html' as Chain %}
 
-<div class="d-flex mb-3">
-  <!-- Массовое добавление атрибута ко всем элементам -->
-  <button class="btn btn-outline-success me-2"
-          data-bs-toggle="modal"
-          data-bs-target="#createAttributeAllModal">
-    <i class="bi bi-plus-lg"></i> Добавить атрибут
-  </button>
-
-  <!-- Массовая подчинённая цепочка -->
-  <button class="btn btn-outline-secondary"
-          data-bs-toggle="modal"
-          data-bs-target="#createChainAllModal">
-    <i class="bi bi-sitemap"></i> Добавить цепочку
-  </button>
-</div>
-
 {{ Chain.render_chain(complex_data) }}
 
 {# Модалки, которые должны быть подключены один раз: #}

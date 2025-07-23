@@ -17,6 +17,18 @@ document.getElementById('editComplexDataModal')
     const commentInput = modal.querySelector('#complexDataComment');
     const submitBtn   = modal.querySelector('#editComplexDataSubmit');
 
+    // Кнопка «Добавить атрибут»
+    const attrBtn = modal.querySelector('button[data-bs-target="#createAttributeAllModal"]');
+    if (attrBtn) {
+      attrBtn.setAttribute('data-data-id', dataId);
+    }
+
+    // Кнопка «Добавить цепочку»
+    const chainBtn = modal.querySelector('button[data-bs-target="#createChainAllModal"]');
+    if (chainBtn) {
+      chainBtn.setAttribute('data-data-id', dataId);
+    }
+
     // Устанавливаем action, значения полей и текст кнопки
     form.action        = updateUrl;
     nameInput.value    = name;
